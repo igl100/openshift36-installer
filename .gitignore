@@ -1,0 +1,5 @@
+.DS_Store
+settings/authentications
+settings/defaults
+settings/mail_authentication
+settings/slack_authentication

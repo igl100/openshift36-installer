@@ -1,0 +1,25 @@
+### DELETE INFRA NODES
+
+- name: Deleting instance {{ ':' }} {{ openshift_infra }}{{ counter }}
+  gce:
+    instance_names: "{{ openshift_infra }}{{ counter }}"
+    state: "absent"
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  ignore_errors: True
+  tags:
+     - delete_infra_nodes
+
+- name: Deleting Docker storage{{ ':' }} {{ openshift_infra }}
+  gce_pd:
+    name: "{{ openshift_infra }}{{ counter }}-docker"
+    state: "absent"
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  tags:
+     - create_infra_nodes
+

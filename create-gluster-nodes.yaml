@@ -1,0 +1,71 @@
+### Create Gluster nodes
+
+- name: Creating instance {{ ':' }} {{ openshift_gluster }}{{ counter }}
+  gce:
+    instance_names: "{{ openshift_gluster }}{{ counter }}"
+    state: "present"
+    machine_type: "{{ gluster_machine_type }}"
+    image: "{{ image }}"
+    zone: "{{ zone }}"
+    network: "{{ network_name }}"
+    subnetwork: "{{ subnetwork_name }}"
+    tags: ["enable-ssh","openshift-gluster-node"]
+    disk_auto_delete: True
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  ignore_errors: True
+  register: infra_instance_creation
+  tags:
+     - create_gluster_nodes
+
+- debug: var=infra_instance_creation
+  tags:
+     - create_gluster_nodes
+
+- name: Getting OpenShift's Gluster Public IP{{ ':' }} {{ infra_instance_creation.instance_data[0].public_ip }}
+  set_fact: openshift_gluster_public_ip={{ infra_instance_creation.instance_data[0].public_ip }}
+  tags:
+     - create_gluster_nodes
+
+- name: Attaching a Docker storage{{ ':' }} {{ openshift_gluster }}
+  gce_pd:
+    instance_name: "{{ openshift_gluster }}{{ counter }}"
+    name: "{{ openshift_gluster }}{{ counter }}-docker"
+    state: present
+    mode: READ_WRITE
+    disk_type: pd-standard
+    size_gb: "{{ docker_size }}"
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  tags:
+     - create_gluster_nodes
+
+- name: Attaching a CNS storage{{ ':' }} {{ openshift_gluster }}
+  gce_pd:
+    instance_name: "{{ openshift_gluster }}{{ counter }}"
+    name: "{{ openshift_gluster }}{{ counter }}-cns"
+    state: present
+    mode: READ_WRITE
+    disk_type: pd-standard
+    size_gb: "{{ docker_size }}"
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  tags:
+     - create_gluster_nodes     
+
+- name: Wait for OpenShift's Node instance to be up{{ ':' }} {{ openshift_gluster_public_ip }}
+  wait_for: host="{{ openshift_gluster_public_ip }}" port={{ ssh_default_image_port }} delay={{ instance_validate_delay }}  state=started
+  tags:
+     - create_gluster_nodes
+
+- name: Adding OpenShift's Node  into gluster group{{ ':' }} openshift_hosts
+  add_host: groups=openshift_gluster_group hostname={{ openshift_gluster_public_ip }}
+            ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }}
+            ansible_port={{ ssh_default_image_port }}
+  tags:
+     - create_gluster_nodes

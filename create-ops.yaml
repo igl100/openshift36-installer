@@ -1,0 +1,560 @@
+---
+- name: Create hosts for OpenShift Openshift@Ops{{ ':' }} Masters, Infras, Glusters and a Nodes
+  hosts: localhost
+  connection: connection
+  gather_facts: False
+  vars_files:
+     - settings/authentications
+     - settings/defaults
+  tasks:
+### VARIABLES SETUP
+     - set_fact: region={{ gce_default_region }}
+       when: region is not defined
+       tags:
+          - always
+
+     - set_fact: zone={{ gce_default_zone }}
+       when: zone is not defined
+       tags:
+          - always
+
+     - set_fact: network_name={{ gce_default_network_name }}
+       when: network_name is not defined
+       tags:
+          - always
+
+     - set_fact: subnetwork_name={{ gce_default_subnetwork_name }}
+       when: subnetwork_name is not defined
+       tags:
+          - always
+
+     - set_fact: subnetwork_range={{ gce_default_subnetwork_range }}
+       when: subnetwork_range is not defined
+       tags:
+          - always
+
+     - set_fact: image={{ gce_default_image }}
+       when: image is not defined
+       tags:
+          - always
+
+     - set_fact: master_machine_type={{ gce_master_machine_type }}
+       when: machine_type is not defined
+       tags:
+          - always
+
+     - set_fact: infra_machine_type={{ gce_infra_machine_type }}
+       when: machine_type is not defined
+       tags:
+          - always
+
+     - set_fact: gluster_machine_type={{ gce_gluster_machine_type }}
+       when: machine_type is not defined
+       tags:
+          - always
+
+     - set_fact: nodes_machine_type={{ gce_node_machine_type }}
+       when: machine_type is not defined
+       tags:
+          - always
+
+     - set_fact: lb_machine_type={{ gce_lb_machine_type }}
+       when: machine_type is not defined
+       tags:
+          - always
+
+     - set_fact: docker_size={{ gce_default_docker_size }}
+       when: docker_size is not defined
+       tags:
+          - always
+
+     - name: Defining OpenShift's Master{{ ':' }} {{ prefix_id }}-master
+       set_fact: openshift_master="{{ prefix_id }}-master"
+       tags:
+          - always
+
+     - name: Defining OpenShift's Infra{{ ':' }} {{ prefix_id }}-infra
+       set_fact: openshift_infra="{{ prefix_id }}-infra"
+       tags:
+          - always
+
+     - name: Defining OpenShift's Node{{ ':' }} {{ prefix_id }}-node
+       set_fact: openshift_node="{{ prefix_id }}-node"
+       tags:
+          - always
+
+     - name: Defining OpenShift's Guster{{ ':' }} {{ prefix_id }}-gluster
+       set_fact: openshift_gluster="{{ prefix_id }}-gluster"
+       tags:
+          - always
+
+     - name: Defining OpenShift's Masters Balancer {{ ':' }} {{ prefix_id }}-mlb
+       set_fact: openshift_masters_lb="{{ prefix_id }}-mlb"
+       tags:
+          - always
+
+     - name: Defining OpenShift's Routers Balancer {{ ':' }} {{ prefix_id }}-rlb
+       set_fact: openshift_routers_lb="{{ prefix_id }}-rlb"
+       tags:
+          - always
+
+### GENERATING VIRTUAL MACHINES SERVICES ----- IF YOU WANT TO CHANGE FORM GCLOUD TO ANTOHER PROVIDER, 
+### SUPPLY YOUR OWN PROVIDER TASK FILES TO CREATE INSTANCES
+### THE FILES THAT SHOULD BE REPLACED ARE: 
+###          (create-master-nodes.yaml, create-infra-nodes.yaml, create-gluster-nodes.yaml, create-nodes.yaml)
+
+### CREATE MASTER NODES
+     - name: Creating masters
+       include: ./create-master-nodes.yaml counter={{item}}
+       with_sequence: count={{ master_nodes }}
+       tags:
+          - create_servers
+
+### CREATE INFRA NODES
+     - name: Creating infra
+       include: ./create-infra-nodes.yaml counter={{item}}
+       with_sequence: count={{ infra_nodes }}
+       tags:
+          - create_servers
+
+### CREATE GLUSTER NODES
+     - name: Creating gluster
+       include: ./create-gluster-nodes.yaml counter={{item}}
+       with_sequence: count={{ gluster_nodes }}
+       tags:
+          - create_servers
+
+### CREATE NODES
+     - name: Creating nodes
+       include: ./create-nodes.yaml counter={{item}}
+       with_sequence: count={{ process_nodes }}
+       tags:
+          - create_servers
+
+### CREATE MASTERS LOAD BALANCER
+     - name: Creating masters load balancer
+       include: ./create-masters-lb.yaml counter={{item}}
+       with_sequence: count={{ masters_balancers }}
+       tags:
+          - create_servers
+
+### CREATE ROUTES BALANCERS
+     - name: Creating router load balancer
+       include: ./create-routers-lb.yaml counter={{item}}
+       with_sequence: count={{ routers_balancers }}
+       tags:
+          - create_servers
+
+### CREATING INVENTORY FILE FOR FUTURE RUNS
+- name: Creating inventory file
+  hosts: localhost
+  gather_facts: False
+  vars_files:
+     - settings/authentications
+     - settings/defaults
+  tasks:
+      - name: Saving inventory to hosts file
+        include: ./create-inventory.yaml
+        tags:
+           - generating_inventory
+
+### DELETING OLD KEYS
+- name: Setting up keys
+  hosts: all
+  gather_facts: False
+  tasks:
+
+      - name: Searching for keys
+        find:
+           paths: /root/.ssh/
+        register: keys_to_delete
+        tags: 
+           - ssh
+
+      - name: Deleting old keys
+        file:
+           path: "{{ item.path }}"
+           state: absent
+        with_items: "{{ keys_to_delete.files }}"
+        tags: 
+           - ssh
+
+      - name: Generate keys for All Servers
+        command: "ssh-keygen -b 4096 -t rsa -f /root/.ssh/id_rsa -q -N \"\""
+        tags:
+           - ssh
+
+### SETTING UP KEYS
+- name: Setting up keys for master_group
+  hosts: openshift_master_group
+  gather_facts: False
+  tasks:
+      - name: Reading Masters keys
+        shell: cat ~/.ssh/id_rsa.pub
+        register: ssh_keys
+        tags:
+           - authorized_keys
+
+- name: Saving keys inventory 
+  hosts: localhost
+  gather_facts: False
+  tasks:
+      - name: Deleting old local keys inventory
+        file:
+           path: "./tmp/authorized_keys"
+           state: absent
+        tags: 
+           - authorized_keys
+
+      - name: Retriving Masters hosts
+        set_fact: masters_hosts={{ groups[['openshift_master_group'][0]] }}
+        tags:
+           - authorized_keys
+
+      - name: Writing keys to authorized_keys
+        lineinfile:
+                 path: "./tmp/authorized_keys"
+                 create: yes
+                 line: "{{hostvars[item]['ssh_keys']['stdout'] }}"
+        with_items:
+                  - "{{ groups[['openshift_master_group'][0]] }}" 
+        tags:
+           - authorized_keys
+
+- name: Distributing masters keys
+  hosts: all
+  gather_facts: False
+  tasks:
+      - name: Deploy masters keys to all servers
+        copy:
+           src="./tmp/authorized_keys"
+           dest="/root/.ssh/authorized_keys"
+        tags:
+           - authorized_keys
+
+###" Changing ssh known_hosts question avoidance
+- name: Setting up ssh for automatic connection
+  hosts: all
+  gather_facts: False
+  tasks:
+      - name: Changeing ssh_config file
+        lineinfile: 
+                 line: "StrictHostKeyChecking no\nUserKnownHostsFile /dev/null\nLogLevel QUIET"
+                 path: /etc/ssh/ssh_config
+        tags:
+           - ssh_config
+
+      - name: Restarting sshd service
+        service: name=sshd state=restarted
+        tags:
+           - ssh_config
+
+## Hosts update
+- name: Updating servers
+  hosts: all
+  gather_facts: False
+  tasks:
+      - name: Copying Repository Files
+        copy: 
+           src: "./templates/ose.repo" 
+           dest: "/etc/yum.repos.d/ose.repo"
+           owner: root
+           group: root
+           mode: 660
+        tags:
+           - prepare
+
+      - name: Updating the entire host
+        yum: name="*" state=latest
+        tags:
+           - prepare
+
+### "Starting docker install
+- name: Preparing all hosts and installing Docker
+  hosts: openshift_master_group,openshift_node_group,openshift_infra_group,openshift_gluster_group
+  gather_facts: False
+  vars:
+     docker_device: /dev/sdb
+     docker_device_partition: "{{ docker_device }}1"
+     prereqs_packages:
+       - vim
+       - wget
+       - git
+       - net-tools
+       - bind-utils
+       - atomic-openshift-excluder
+       - atomic-openshift-docker-excluder
+       - iptables-services
+       - bridge-utils
+       - bash-completion
+       - docker
+       - httpd-tools
+       - atomic-openshift-utils
+  tasks:
+      - name: Installing Basic Applications
+        yum: name={{ item }} state=present
+        with_items: "{{ prereqs_packages }}"
+        tags:
+           - prepare
+
+      - name: Create a partition for Docker
+        command: parted {{ docker_device }} --script 'mklabel msdos mkpart primary 0% 100%'
+        tags:
+           - prepare
+
+      - name: Create a VG named docker-vg (used for Docker)
+        lvg: vg=docker-vg pvs={{ docker_device_partition }}
+        tags:
+           - prepare
+
+      - name: Configuring Docker-Storage-Setup first
+        lineinfile: dest=/etc/sysconfig/docker-storage-setup line="VG=docker-vg"
+        tags:
+           - prepare
+
+      - name: Run a Docker-Storage-Setup
+        command: /usr/bin/docker-storage-setup
+        tags:
+           - prepare
+
+      - name: Execute a Atomic OpenShift Excluder
+        command: atomic-openshift-excluder unexclude
+        tags:
+           - prepare
+
+      - name: Initiating Docker Service
+        service: name=docker state=started
+        tags:
+           - prepare
+
+      - name: Enabling Docker Service
+        service: name=docker enabled=yes
+        tags:
+           - prepare
+
+      - name: Execute a Atomic OpenShift Excluder
+        command: atomic-openshift-excluder unexclude
+        tags:
+           - prepare
+
+      - name: Setting Docker configuration with with the correct info
+        lineinfile: dest=/etc/sysconfig/docker regexp="OPTIONS=.*" line="OPTIONS=\"--selinux-enabled --insecure-registry 172.30.0.0/16  --log-driver=journald\""
+        tags:
+           - prepare
+
+- name: Changing firewalld to iptables
+  hosts: all
+  gather_facts: False
+  tasks:
+      - name: Copying firewalld disable scritp
+        copy: 
+           src: "./templates/disable-firewalld.sh" 
+           dest: "/root/disable-firewalld.sh"
+           owner: root
+           group: root
+           mode: 'u+rwx,g-rwx,o-r'
+        tags:
+           - iptables
+
+      - name: Running firewalld disable scritp
+        copy: 
+           src: "./templates/disable-firewalld.sh" 
+           dest: "/root/disable-firewalld.sh"
+           owner: root
+           group: root
+           mode: 'u+rwx,g-rwx,o-r'
+        tags:
+           - iptables
+
+      - name: Running installation
+        shell: /root/disable-firewalld.sh
+        tags:
+           - iptables
+
+### CREATING OPENSHIFT CONFIGURATION FILE
+- name: Creating Openshift inventory config file
+  hosts: localhost
+  gather_facts: False
+  vars_files:
+     - settings/authentications
+     - settings/defaults
+  tasks:
+      - name: Setting up Openshift configuration file
+        include: ./create-openshift-config.yaml
+        tags:
+           - openshift_inventory
+
+### SELECTING OPENSHIFT MASTER INSTALLATION HOST
+- name: Selecting main installation server for OpenShift
+  hosts: localhost
+  gather_facts: False
+  vars_files:
+     - settings/authentications
+     - settings/defaults
+  tasks:
+      - name: Retriving Installer host
+        set_fact: headnodes={{ groups[['openshift_master_group'][0]] }}
+        tags:
+           - selecting_headnode
+
+      - name: Selecting first master as main installer
+        add_host: groups=openshift_headnode_group hostname={{ headnodes[0] }}
+                  ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }}
+                  ansible_port={{ ssh_default_image_port }}
+        tags:
+           - selecting_headnode
+
+### CREATING HTPASSWD FILES
+- name: Setting up htpasswd
+  hosts: openshift_master_group,openshift_headnode_group
+  tasks:
+      - name: Deleting old htpasswd configuration
+        file:
+           path: "/etc/openshift-passwords"
+           state: absent
+        tags: 
+           - openshift_users
+
+      - name: Creating second user
+        shell: "htpasswd -b -c /etc/openshift-passwords dv r3dh4t1!"
+        tags:
+           - openshift_users
+
+- name: Install OpenShift
+  hosts: openshift_headnode_group
+  gather_facts: False
+  vars_files:
+     - settings/authentications
+     - settings/defaults
+  tasks:
+      - name: Copying Inventory File
+        copy:
+           src="./tmp/openshift.config"
+           dest="/etc/ansible/hosts"
+        tags:
+           - install_openshift
+
+      - name: Starting Openshift installation
+        debug:
+            msg: "Next step will take about 15-20 minutes. To view install execution login to shown ip address and tail output file at /root/osp-install.log"
+        tags:
+           - install_openshift
+
+      - name: Running installation
+        shell: "ansible-playbook -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml -e openshift_disable_check=disk_availability,memory_availability >> /root/osp-install.log &"
+        async: 45
+        poll: 0
+        tags:
+           - install_openshift
+
+      - name: Waiting for installation to end...
+        pause:
+            minutes: 65
+        tags:
+           - install_openshift
+
+- name: OpenShift Post Install Configuration
+  hosts: openshift_master_group,openshift_headnode_group
+  gather_facts: False
+  tasks:
+      - name: Changing authorization provider
+        replace:
+              path: "/etc/origin/master/master-config.yaml"
+              regexp: "DenyAllPasswordIdentityProvider"
+              replace: "HTPasswdPasswordIdentityProvider\n      file: /etc/openshift-passwords"
+              backup: yes
+        tags:
+           - openshift_postinstall
+
+      - name: Restarting master SERVICES
+        service: name=atomic-openshift-master-api state=restarted
+        tags:
+           - openshift_postinstall
+
+      - name: Restarting master services
+        service: name=atomic-openshift-master-controllers state=restarted
+        tags:
+           - openshift_postinstall
+
+- name: Adding development containers
+  hosts: openshift_headnode_group
+  gather_facts: False
+  tasks:
+      - name: Deleting Dev Environment If exists
+        command: "oc delete project dev"
+        ignore_errors: True
+        tags:
+           - containers_setup
+
+      - name: Deleting Stage Environment If exists
+        command: "oc delete project stage"
+        ignore_errors: True
+        tags:
+           - containers_setup
+
+      - name: Deleting CICD Environment If exists
+        command: "oc delete project cicd"
+        ignore_errors: True
+        tags:
+           - containers_setup
+
+      - name: Creating Dev Environment
+        command: "oc new-project dev --display-name=\"Tasks - Dev\""
+        ignore_errors: True
+        tags:
+           - containers_setup
+
+      - name: Creating Stage Environment
+        command: "oc new-project stage --display-name=\"Tasks - Stage\""
+        ignore_errors: True
+        tags:
+           - containers_setup
+
+      - name: Creating CICD Environment
+        command: "oc new-project cicd --display-name=\"CI/CD\""
+        ignore_errors: True
+        tags:
+           - containers_setup
+
+      - name: Copying Yaml CICD template File
+        copy:
+           src="./templates/cicdTemplate.j2"
+           dest="/root/cicd-template.yaml"
+        ignore_errors: True
+        tags:
+           - containers_setup
+
+      - name: Adding jenkins user to Dev
+        command: "oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n dev"
+        tags:
+           - containers_setup
+
+      - name: Adding jenkins user to Stage
+        command: "oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n stage"
+        tags:
+           - containers_setup
+
+      - name: Adding DV user to dev
+        command: "oadm policy add-role-to-user admin dv -n dev"
+        tags:
+           - containers_setup
+
+      - name: Adding DV user to Stage
+        command: "oadm policy add-role-to-user admin dv -n stage"
+        tags:
+           - containers_setup
+
+      - name: Adding DV user to CICD
+        command: "oadm policy add-role-to-user admin dv -n cicd"
+        tags:
+           - containers_setup
+
+      - name: Uploading Yaml File
+        command: "oc create -f /root/cicd-template.yaml -n cicd"
+        tags:
+           - containers_setup
+
+      - name: Running Yaml File
+        command: "oc new-app cicd -n cicd"
+        tags:
+           - containers_setup

@@ -1,0 +1,8 @@
+gce_service_account_email: <<gcloud account email>>
+gce_credentials_file: <<path/to/json_authentication_file>>
+gce_project_id: <<google cloud project id>>
+redhat_subscription_username: <<red hat account username>>
+redhat_subscription_password: <<red hat account password>>
+redhat_subscription_pool_id: <<redhat pool-id>> 
+
+

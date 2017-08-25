@@ -1,0 +1,24 @@
+### DELETE MASTERS TASKS
+- name: deleting instance {{ ':' }} {{ openshift_master }}{{ counter }}
+  gce:
+    instance_names: "{{ openshift_master }}{{ counter }}"
+    state: "absent"
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  ignore_errors: True
+  tags:
+     - delete_masters
+
+- name: Deleting Docker storage{{ ':' }} {{ openshift_master }}{{ counter }}
+  gce_pd:
+    name: "{{ openshift_master }}{{ counter }}-docker"
+    state: absent
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  tags:
+     - delete_masters
+

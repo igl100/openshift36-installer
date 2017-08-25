@@ -1,0 +1,56 @@
+### Create Nodes
+
+- name: Creating instance {{ ':' }} {{ openshift_node }}{{ counter }}
+  gce:
+    instance_names: "{{ openshift_node }}{{ counter }}"
+    state: "present"
+    machine_type: "{{ nodes_machine_type }}"
+    image: "{{ image }}"
+    zone: "{{ zone }}"
+    network: "{{ network_name }}"
+    subnetwork: "{{ subnetwork_name }}"
+    tags: ["enable-ssh"]
+    disk_auto_delete: True
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  ignore_errors: True
+  register: node_instance_creation
+  tags:
+     - create_nodes
+
+- debug: var=node_instance_creation
+  tags:
+     - create_nodes
+
+- name: Getting OpenShift's Node Public IP{{ ':' }} {{ node_instance_creation.instance_data[0].public_ip }}
+  set_fact: openshift_node_public_ip={{ node_instance_creation.instance_data[0].public_ip }}
+  tags:
+     - create_nodes
+
+- name: Attaching a Docker storage{{ ':' }} {{ openshift_node }}
+  gce_pd:
+    instance_name: "{{ openshift_node }}{{ counter }}"
+    name: "{{ openshift_node }}{{ counter }}-docker"
+    state: present
+    mode: READ_WRITE
+    disk_type: pd-standard
+    size_gb: "{{ docker_size }}"
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  tags:
+     - create_nodes
+
+- name: Wait for OpenShift's Node instance to be up{{ ':' }} {{ openshift_node_public_ip }}
+  wait_for: host="{{ openshift_node_public_ip }}" port={{ ssh_default_image_port }} delay={{ instance_validate_delay }}  state=started
+  tags:
+     - create_nodes
+
+- name: Adding OpenShift's Node  into group{{ ':' }} openshift_hosts
+  add_host: groups=openshift_node_group hostname={{ openshift_node_public_ip }}
+            ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }}
+            ansible_port={{ ssh_default_image_port }}
+  tags:
+     - create_nodes

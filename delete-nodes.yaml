@@ -1,0 +1,24 @@
+### DELETING NODES
+
+- name: Deleting instance {{ ':' }} {{ openshift_node }}{{ counter }}
+  gce:
+    instance_names: "{{ openshift_node }}{{ counter }}"
+    state: "absent"
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  ignore_errors: True
+  tags:
+     - delete_nodes
+
+- name: Deleting Docker storage{{ ':' }} {{ openshift_node }}
+  gce_pd:
+    name: "{{ openshift_node }}{{ counter }}-docker"
+    state: absent
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  tags:
+     - delete_nodes

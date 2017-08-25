@@ -1,0 +1,66 @@
+---
+- name: Notify a specific attendee regarding his environment OpenShift TestDrive@Ops
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars_files:
+     - gce/authentication
+     - gce/defaults
+     - notification/mail_authentication
+  vars:
+     attendees: "{{ lookup('file', 'ops-attendees.txt').split('\n') }}"
+  tasks:
+     - include: commons/setting_defaults.yaml
+
+     - name: email is not defined
+       fail: msg="email is not defined"
+       when: email is not defined
+
+### USERNAME LOOKUP USERNAME LOOKUP USERNAME LOOKUP USERNAME LOOKUP USERNAME
+#### USERNAME LOOKUP USERNAME LOOKUP USERNAME LOOKUP USERNAME LOOKUP USERNAME
+     - name: Lookup for this email{{ ':' }} {{ email }}
+       set_fact: line_selected={{ item }}
+       with_items: "{{ attendees }}"
+       when: email in item
+
+     - fail: msg="{{ email }} wasn't found into file ops-attendees.txt"
+       when: line_selected is not defined
+
+     - set_fact: user_id={{ line_selected.split(',')[0] }}
+     - set_fact: name={{ line_selected.split(',')[1] }}
+   
+     - set_fact: openshift_master_hostname="{{ user_id }}-master"
+     - set_fact: openshift_infra_hostname="{{ user_id }}-infra"
+
+     - name: Fetch information regarding OpenShift's Master{{ ':' }} {{ openshift_master_hostname }}
+       gce:
+         instance_names: "{{ openshift_master_hostname }}"
+         zone: "{{ zone }}"
+         project_id: "{{ gce_project_id }}"
+         credentials_file: "{{ gce_credentials_file }}"
+         service_account_email: "{{ gce_service_account_email }}"
+       register: master_instance_status
+
+     - debug: var=master_instance_status
+
+     - name: Getting OpenShift's Master Public IP{{ ':' }} {{ master_instance_status.instance_data[0].public_ip }}
+       set_fact: openshift_master_public_ip={{ master_instance_status.instance_data[0].public_ip }}
+
+     - name: Fetch information regarding OpenShift's Infra{{ ':' }} {{ openshift_infra_hostname }}
+       gce:
+         instance_names: "{{ openshift_infra_hostname }}"
+         zone: "{{ zone }}"
+         project_id: "{{ gce_project_id }}"
+         credentials_file: "{{ gce_credentials_file }}"
+         service_account_email: "{{ gce_service_account_email }}"
+       register: infra_instance_status
+
+     - debug: var=infra_instance_status
+
+     - name: Getting OpenShift's Infra Public IP{{ ':' }} {{ infra_instance_status.instance_data[0].public_ip }}
+       set_fact: openshift_infra_public_ip={{ infra_instance_status.instance_data[0].public_ip }}
+
+     - include: commons/ops-mail.yaml
+       when: default_smtp_server is defined and default_smtp_server is not none and default_smtp_port is defined and default_smtp_port is not none and default_smtp_username is defined and default_smtp_username is not none and default_smtp_password is defined and default_smtp_password is not none
+       tags:
+          - mail

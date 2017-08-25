@@ -1,0 +1,136 @@
+### CREATE INVENTORY FILE
+- name: Deleting old hosts file
+  file:
+     path: "./tmp/hosts"
+     state: absent
+  ignore_errors: True
+  tags: 
+     - generating_inventory
+
+- name: Retriving Masters hosts
+  set_fact: masters={{ groups[['openshift_master_group'][0]] }}
+  tags:
+     - generating_inventory
+
+- name: Retriving Infra hosts
+  set_fact: infras={{ groups[['openshift_infra_group'][0]] }}
+  tags:
+     - generating_inventory
+
+- name: Retriving Gluster hosts
+  set_fact: glusters={{ groups[['openshift_gluster_group'][0]] }}
+  tags:
+     - generating_inventory
+
+- name: Retriving Nodes hosts
+  set_fact: nodes={{ groups[['openshift_node_group'][0]] }}
+  tags:
+     - generating_inventory
+
+- name: Retriving Masters Load balancer hosts
+  set_fact: masters_lb={{ groups[['openshift_master_lb_group'][0]] }}
+  tags:
+     - generating_inventory
+
+- name: Retriving Router Load balancer hosts
+  set_fact: routers_lb={{ groups[['openshift_router_lb_group'][0]] }}
+  tags:
+     - generating_inventory
+
+### Masters Hosts
+- name: Adding masters header
+  lineinfile: 
+           line: "[openshift_master_group]"
+           create: yes
+           path: "./tmp/hosts"
+  tags:
+     - generating_inventory
+
+- name: Adding masters group to inventory
+  lineinfile: 
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           path: "./tmp/hosts"
+  with_items: "{{ masters }}"
+  tags:
+     - generating_inventory
+
+### Infra Hosts
+- name: Adding infra header
+  lineinfile: 
+           line: "\n[openshift_infra_group]"
+           path: "./tmp/hosts"
+  tags:
+     - generating_inventory
+
+- name: Adding infra group to inventory
+  lineinfile: 
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           path: "./tmp/hosts"
+  with_items: "{{ infras }}"
+  tags:
+      - generating_inventory
+
+### Gluster Hosts 
+- name: Adding gluster header
+  lineinfile: 
+           line: "\n[openshift_gluster_group]"
+           path: "./tmp/hosts"
+  tags:
+     - generating_inventory
+
+- name: Adding infra group to inventory
+  lineinfile: 
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           path: "./tmp/hosts"
+  with_items: "{{ glusters }}"
+  tags:
+     - generating_inventory
+
+### Nodes Hosts
+- name: Adding node header
+  lineinfile: 
+           line: "\n[openshift_node_group]"
+           path: "./tmp/hosts"
+  tags:
+     - generating_inventory
+
+- name: Adding node group to inventory
+  lineinfile: 
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           path: "./tmp/hosts"
+  with_items: "{{ nodes }}"
+  tags:
+     - generating_inventory
+
+### Masters lb Hosts 
+- name: Adding master load balancer header
+  lineinfile: 
+           line: "\n[openshift_master_lb_group]"
+           path: "./tmp/hosts"
+  tags:
+     - generating_inventory
+
+- name: Adding master load balancer group to inventory
+  lineinfile: 
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           path: "./tmp/hosts"
+  with_items: "{{ masters_lb }}"
+  tags:
+     - generating_inventory
+
+### Router lb Hosts 
+- name: Adding router load balancer header
+  lineinfile: 
+           line: "\n[openshift_router_lb_group]"
+           path: "./tmp/hosts"
+  tags:
+     - generating_inventory
+
+- name: Adding router load balancer group to inventory
+  lineinfile: 
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           path: "./tmp/hosts"
+  with_items: "{{ routers_lb }}"
+  tags:
+     - generating_inventory
+

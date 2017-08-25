@@ -1,0 +1,72 @@
+### Create infra nodes
+
+- name: Creating instance {{ ':' }} {{ openshift_infra }}{{ counter }}
+  gce:
+    instance_names: "{{ openshift_infra }}{{ counter }}"
+    state: "present"
+    machine_type: "{{ infra_machine_type }}"
+    image: "{{ image }}"
+    zone: "{{ zone }}"
+    network: "{{ network_name }}"
+    subnetwork: "{{ subnetwork_name }}"
+    tags: ["enable-ssh","openshift-infra-node"]
+    disk_auto_delete: True
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  ignore_errors: True
+  register: infra_instance_creation
+  tags:
+     - create_infra_nodes
+
+- debug: var=infra_instance_creation
+  tags:
+     - create_infra_nodes
+
+- name: Getting OpenShift's Infra Public IP{{ ':' }} {{ infra_instance_creation.instance_data[0].public_ip }}
+  set_fact: openshift_infra_public_ip={{ infra_instance_creation.instance_data[0].public_ip }}
+  tags:
+     - create_infra_nodes
+
+- name: Attaching a Docker storage{{ ':' }} {{ openshift_infra }}
+  gce_pd:
+    instance_name: "{{ openshift_infra }}{{ counter }}"
+    name: "{{ openshift_infra }}{{ counter }}-docker"
+    state: present
+    mode: READ_WRITE
+    disk_type: pd-standard
+    size_gb: "{{ docker_size }}"
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  tags:
+     - create_infra_nodes
+
+- name: Attaching a CNS storage{{ ':' }} {{ openshift_gluster }}
+  gce_pd:
+    instance_name: "{{ openshift_infra }}{{ counter }}"
+    name: "{{ openshift_infra }}{{ counter }}-cns"
+    state: present
+    mode: READ_WRITE
+    disk_type: pd-standard
+    size_gb: "{{ docker_size }}"
+    zone: "{{ zone }}"
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  tags:
+     - create_infra_nodes  
+
+- name: Wait for OpenShift's Infra instance to be up{{ ':' }} {{ openshift_infra_public_ip }}
+  wait_for: host="{{ openshift_master_public_ip }}" port={{ ssh_default_image_port }} delay={{ instance_validate_delay }}  state=started
+  tags:
+     - create_infra_nodes
+
+- name: Adding OpenShift's Infra into group{{ ':' }} openshift_hosts
+  add_host: groups=openshift_infra_group hostname={{ openshift_infra_public_ip }}
+            ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }}
+            ansible_port={{ ssh_default_image_port }}
+  tags:
+     - create_infra_nodes
+

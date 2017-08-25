@@ -1,0 +1,24 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+glusterfs
+glusterfs_registry
+lb
+
+[OSEv3:vars]
+deployment_type=openshift-enterprise
+ansible_ssh_user=root
+# openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift-passwords'}]
+# openshift_master_htpasswd_users={'demo': '$apr1$ucdyfv6b$EJFanTIfig6LR8cszOnKV0', ‘dv’: '$apr1$cUEhxniK$.dvXBcd9XE6BmSpeWnb2o.'}
+openshift_hosted_router_selector='host=infra'
+openshift_router_selector='host=infra'
+openshift_hosted_registry_selector='host=infra'
+openshift_registry_selector='host=infra'
+openshift_hosted_metrics_deploy=true
+openshift_metrics_install_metrics=true
+openshift_master_metrics_public_url=https://hawkular-metrics.cloudapps.testdrive.com/hawkular/metrics
+containerized=false
+openshift_hosted_logging_deploy=true
+openshift_hosted_registry_storage_kind=glusterfs
+openshift_master_cluster_method=native

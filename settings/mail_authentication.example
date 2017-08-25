@@ -1,0 +1,4 @@
+default_smtp_server: smtp.gmail.com
+default_smtp_port: 465
+default_smtp_username: <<your@email>> 
+default_smtp_password: <<email_password>>

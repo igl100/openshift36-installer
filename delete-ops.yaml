@@ -1,0 +1,99 @@
+---
+- name: Deleting hosts for OpenShift Openshift@Ops{{ ':' }} Master, Infra and a Node
+  hosts: localhost
+  connection: connection
+  gather_facts: False
+  vars_files:
+     - gce/authentication
+     - gce/defaults
+     - notification/mail_authentication
+  vars:
+     attendees: "{{ lookup('file', 'ops-attendees.txt').split('\n') }}"
+     master_nodes: 3
+     infra_nodes: 4
+     gluster_nodes: 4
+     process_nodes: 4
+     instance_validate_delay: 30
+  tasks:
+     - include: commons/setting_defaults.yaml
+       tags:
+          - always
+
+     - name: email is not defined
+       fail: msg="email is not defined"
+       when: email is not defined
+       tags:
+          - always
+
+### USERNAME LOOKUP
+     - name: Lookup for this email{{ ':' }} {{ email }}
+       set_fact: line_selected={{ item }}
+       with_items: "{{ attendees }}"
+       when: email in item
+       tags:
+          - always
+
+     - fail: msg="{{ email }} wasnt found into file ops-attendees.txt"
+       when: line_selected is not defined
+       tags:
+          - always
+
+     - set_fact: user_id={{ line_selected.split(',')[0] }}
+       tags:
+         - always
+
+     - set_fact: name={{ line_selected.split(',')[1] }}
+       tags:
+          - always
+
+     - name: Defining OpenShift's Master{{ ':' }} {{ user_id }}-master
+       set_fact: openshift_master="{{ user_id }}-master"
+       tags:
+          - always
+
+     - name: Defining OpenShift's Infra{{ ':' }} {{ user_id }}-infra
+       set_fact: openshift_infra="{{ user_id }}-infra"
+       tags:
+          - always
+
+     - name: Defining OpenShift's Node{{ ':' }} {{ user_id }}-node
+       set_fact: openshift_node="{{ user_id }}-node"
+       tags:
+          - always
+
+     - name: Defining OpenShift's Guster{{ ':' }} {{ user_id }}-gluster
+       set_fact: openshift_gluster="{{ user_id }}-gluster"
+       tags:
+          - always
+
+### DELETING MASTER NODES
+
+     - name: Deleting masters
+       include: ./delete-master-nodes.yaml counter={{item}}
+       with_sequence: count={{ master_nodes }}
+       tags:
+          - delete_masters
+
+### DELETING INFRA NODES
+
+     - name: Deleting infra
+       include: ./delete-infra-nodes.yaml counter={{item}}
+       with_sequence: count={{ infra_nodes }}
+       tags:
+          - delete_infra_nodes
+
+### DELETING GLUSTER NODES
+
+     - name: Deleting gluster
+       include: ./delete-gluster-nodes.yaml counter={{item}}
+       with_sequence: count={{ gluster_nodes }}
+       tags:
+          - delete_gluster_nodes
+
+### DELETING NODES
+
+     - name: Deleting nodes
+       include: ./delete-nodes.yaml counter={{item}}
+       with_sequence: count={{ process_nodes }}
+       tags:
+          - delete_nodes
