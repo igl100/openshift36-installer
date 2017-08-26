@@ -144,7 +144,7 @@
      - openshift_inventory
 
 
-### CREATING GLUSTERFS_REGISTRY DEFINITION   
+### CREATING LOADBALANCER DEFINITION   
 - name: Adding masters balancer header
   lineinfile: 
            line: "\n[lb]"

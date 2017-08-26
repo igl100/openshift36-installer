@@ -429,27 +429,38 @@
   tasks:
       - name: Copying Inventory File
         copy:
-           src="./tmp/openshift.config"
-           dest="/etc/ansible/hosts"
+           src: "./tmp/openshift.config"
+           dest: "/etc/ansible/hosts"
         tags:
            - install_openshift
 
-      - name: Starting Openshift installation
+      - name: Retriving Installer host
+        set_fact: headnodes={{ groups[['openshift_master_group'][0]] }}
+        tags:
+           - selecting_headnode
+
+      - name: Start Openshift Installation
         debug:
-            msg: "Next step will take about 15-20 minutes. To view install execution login to shown ip address and tail output file at /root/osp-install.log"
+            msg: 
+              - 'Please start Openshift Installation' 
+              - 'Access {{ headnodes[0] }} (ssh root@{{ headnodes[0] }}) and run:' 
+              - 'ansible-playbook -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml -e openshift_disable_check=disk_availability,memory_availability'
+              - ' '
+              - 'When installation finishes, you can continue this playbook by pressing ctrl + C then C.' 
+              - 'If you want to finish this playbook later, run: '
+              - 'ansible-playbook install-openshift.yaml -i ./tmp/hosts --tags "selecting_headnode,openshift_postinstall,containers_setup"'
         tags:
            - install_openshift
 
-      - name: Running installation
-        shell: "ansible-playbook -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml -e openshift_disable_check=disk_availability,memory_availability >> /root/osp-install.log &"
-        async: 45
-        poll: 0
-        tags:
-           - install_openshift
+   
+#      - name: Running installation
+#        command: "ansible-playbook -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml -e openshift_disable_check=disk_availability,memory_availability >> /root/ops-install.log"
+#        tags:
+#           - install_openshift
 
       - name: Waiting for installation to end...
         pause:
-            minutes: 65
+            minutes: 70
         tags:
            - install_openshift
 
