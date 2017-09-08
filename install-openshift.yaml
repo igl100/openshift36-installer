@@ -8,63 +8,8 @@
      - settings/defaults
   tasks:
 ### VARIABLES SETUP
-     - set_fact: region={{ gce_default_region }}
-       when: region is not defined
-       tags:
-          - always
-
-     - set_fact: zone={{ gce_default_zone }}
-       when: zone is not defined
-       tags:
-          - always
-
-     - set_fact: network_name={{ gce_default_network_name }}
-       when: network_name is not defined
-       tags:
-          - always
-
-     - set_fact: subnetwork_name={{ gce_default_subnetwork_name }}
-       when: subnetwork_name is not defined
-       tags:
-          - always
-
-     - set_fact: subnetwork_range={{ gce_default_subnetwork_range }}
-       when: subnetwork_range is not defined
-       tags:
-          - always
-
-     - set_fact: image={{ gce_default_image }}
-       when: image is not defined
-       tags:
-          - always
-
-     - set_fact: master_machine_type={{ gce_master_machine_type }}
-       when: machine_type is not defined
-       tags:
-          - always
-
-     - set_fact: infra_machine_type={{ gce_infra_machine_type }}
-       when: machine_type is not defined
-       tags:
-          - always
-
-     - set_fact: gluster_machine_type={{ gce_gluster_machine_type }}
-       when: machine_type is not defined
-       tags:
-          - always
-
-     - set_fact: nodes_machine_type={{ gce_node_machine_type }}
-       when: machine_type is not defined
-       tags:
-          - always
-
-     - set_fact: lb_machine_type={{ gce_lb_machine_type }}
-       when: machine_type is not defined
-       tags:
-          - always
-
-     - set_fact: docker_size={{ gce_default_docker_size }}
-       when: docker_size is not defined
+     - name: Setting Variables
+       include: ./commons.yaml
        tags:
           - always
 
@@ -145,18 +90,24 @@
        tags:
           - create_servers
 
+     - name: Saving inventory to hosts file
+       include: ./create-inventory.yaml
+       tags:
+          - generating_inventory
+
 ### CREATING INVENTORY FILE FOR FUTURE RUNS
-- name: Creating inventory file
-  hosts: localhost
-  gather_facts: False
-  vars_files:
-     - settings/authentications
-     - settings/defaults
-  tasks:
-      - name: Saving inventory to hosts file
-        include: ./create-inventory.yaml
-        tags:
-           - generating_inventory
+#- name: Creating inventory file
+#  hosts: localhost
+#  gather_facts: False
+#  vars_files:
+#     - settings/authentications
+#     - settings/defaults
+#  tasks:
+#      - name: Saving inventory to hosts file
+#        include: ./create-inventory.yaml
+#        tags:
+#           - generating_inventory
+
 
 ### DELETING OLD KEYS
 - name: Setting up keys
@@ -252,15 +203,18 @@
 ## Hosts update
 - name: Updating servers
   hosts: all
+  vars_files:
+     - settings/authentications
+     - settings/defaults
   gather_facts: False
   tasks:
-      - name: Copying Repository Files
-        copy: 
-           src: "./templates/ose.repo" 
-           dest: "/etc/yum.repos.d/ose.repo"
+      - name: Copying Openshift file template
+        template:
+           src: "./templates/openshift.repo.j2"
+           dest: "/etc/yum.repos.d/openshift.repo"
            owner: root
            group: root
-           mode: 660
+           mode: "u=rw,g=r,o=r"
         tags:
            - prepare
 
@@ -346,41 +300,62 @@
   hosts: all
   gather_facts: False
   tasks:
-      - name: Copying firewalld disable scritp
-        copy: 
-           src: "./templates/disable-firewalld.sh" 
-           dest: "/root/disable-firewalld.sh"
-           owner: root
-           group: root
-           mode: 'u+rwx,g-rwx,o-r'
+      - name: Installing iptables-services
+        yum:
+          name: iptables-services
+          state: latest
         tags:
            - iptables
 
-      - name: Running firewalld disable scritp
-        copy: 
-           src: "./templates/disable-firewalld.sh" 
-           dest: "/root/disable-firewalld.sh"
-           owner: root
-           group: root
-           mode: 'u+rwx,g-rwx,o-r'
+      - name: Disabling firewalld services
+        systemd:
+          masked: yes
+          name: firewalld
+          state: stopped
         tags:
            - iptables
 
-      - name: Running installation
-        shell: /root/disable-firewalld.sh
+      - name: Running iptables service
+        systemd:
+          name: iptables
+          enabled: yes
+          state: started
         tags:
            - iptables
+
+      - name: Running ip6tables service
+        systemd:
+          name: ip6tables
+          enabled: yes
+          state: started
+        tags:
+           - iptables
+
+### CONFIGURING HAPROXY FOR ROUTERS
+- name: Creating and configuring haproxy router balancer.
+  hosts: openshift_router_lb_group
+  gather_facts: False
+  tasks:
+       - name: Configuring Haproxy
+         include: ./configure-haproxy.yaml
+         tags:
+            - openshift_routers_lb
 
 ### CREATING OPENSHIFT CONFIGURATION FILE
 - name: Creating Openshift inventory config file
-  hosts: localhost
+  hosts: openshift_master_group
   gather_facts: False
   vars_files:
      - settings/authentications
      - settings/defaults
   tasks:
-      - name: Setting up Openshift configuration file
-        include: ./create-openshift-config.yaml
+      - name: Copying Openshift file template
+        template:
+           src: "./templates/openshift_hosts.j2"
+           dest: "/etc/ansible/hosts"
+           owner: root
+           group: root
+           mode: "u=rw,g=r,o=r"
         tags:
            - openshift_inventory
 
@@ -427,13 +402,6 @@
      - settings/authentications
      - settings/defaults
   tasks:
-      - name: Copying Inventory File
-        copy:
-           src: "./tmp/openshift.config"
-           dest: "/etc/ansible/hosts"
-        tags:
-           - install_openshift
-
       - name: Retriving Installer host
         set_fact: headnodes={{ groups[['openshift_master_group'][0]] }}
         tags:
@@ -451,12 +419,6 @@
               - 'ansible-playbook install-openshift.yaml -i ./tmp/hosts --tags "selecting_headnode,openshift_postinstall,containers_setup"'
         tags:
            - install_openshift
-
-   
-#      - name: Running installation
-#        command: "ansible-playbook -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml -e openshift_disable_check=disk_availability,memory_availability >> /root/ops-install.log"
-#        tags:
-#           - install_openshift
 
       - name: Waiting for installation to end...
         pause:

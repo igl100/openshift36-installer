@@ -1,0 +1,51 @@
+### DELETING OLD HAPROXY.CFG FILE
+- name: Deleting old hosts file
+  file:
+      path: "./tmp/haproxy.cfg"
+      state: absent
+  ignore_errors: True
+  tags:
+      - haproxy_config
+
+- name: Installing latest version of haproxy.
+  yum:
+    name: haproxy
+    state: latest
+  tags:
+     - haproxy_config
+
+### CREATING OPENSHIFT CONFIG FILE
+- name: Copying Openshift file template
+  template:
+      src: "./templates/haproxy.j2"
+      dest: "/etc/haproxy/haproxy.cfg"
+      owner: root
+      group: root
+      mode: "u=rw,g=r,o=r"
+  tags:
+      - haproxy_config
+
+- name: Enable haproxy service
+  systemd:
+    state: started
+    enabled: yes
+    name: haproxy
+  tags:
+     - haproxy_config
+
+### CREATING IPTABLES CONFIG FILE
+- name: Copying iptables file template
+  template:
+      src: "./templates/iptables.j2"
+      dest: "/etc/sysconfig/iptables"
+      owner: root
+      group: root
+      mode: "u=rw"
+  tags:
+      - haproxy_config
+
+- name: Restarting iptables services
+  systemd:
+    name: iptables
+    state: restarted
+    enabled: yes

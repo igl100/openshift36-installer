@@ -4,16 +4,17 @@
   connection: local
   gather_facts: False
   vars_files:
-     - gce/authentication
-     - gce/defaults
+     - settings/authentications
+     - settings/defaults
   vars:
      - repository_name: openshift-repository
      - repository_machine_type: n1-standard-2
      - repository_storage_size: 30
   tasks:
-    - include: commons/setting_defaults.yaml
-      tags:
-         - always
+    - name: Setting Variables
+       include: ./commons.yaml
+       tags:
+          - always
 
     - fail: msg="redhat_subscription_username is not defined"
       when: redhat_subscription_username is not defined
@@ -62,8 +63,8 @@
       tags:
          - create
 
-    - name: Adjusting "gce/defaults" file with private IP{{ ':' }} {{ openshift_repository_private_ip }}
-      lineinfile: dest=gce/defaults regexp="^openshift_repository_ip" line="openshift_repository_ip{{ ':' }} {{ openshift_repository_private_ip }}"
+    - name: Adjusting "settings/defaults" file with private IP{{ ':' }} {{ openshift_repository_private_ip }}
+      lineinfile: dest=settings/defaults regexp="^openshift_repository_ip" line="openshift_repository_ip{{ ':' }} {{ openshift_repository_private_ip }}"
       tags:
          - create
 
@@ -97,12 +98,12 @@
 
 ### PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE
 #### PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE PREPARE
-- name: (PREPARE) Preparing all the hosts with a basic configuration
+- name: (PREPARE) Preparing all the hosts with a basic configuration "
   hosts: all
   gather_facts: False
   vars_files:
-     - gce/authentication
-     - gce/defaults
+     - settings/authentications
+     - settings/defaults
   vars:
      repositories:
          - rhel-7-server-rpms
@@ -110,6 +111,7 @@
          - rhel-7-server-ose-3.6-rpms
          - rhel-7-fast-datapath-rpms
          - rhel-7-server-rhmap-4.3-rpms
+         - rhel-7-server-3scale-amp-2.0-rpms
      disk_storage: "/dev/sdb"
      disk_storage_partition: "{{ disk_storage }}1"
      disk_storage_directory: "/var/storage/repos"
@@ -135,6 +137,7 @@
       tags:
          - prepare
 
+#"
     - name: Copy a SSH Key (if does exist)
       lineinfile: dest=/root/.ssh/authorized_keys state=present create=yes line="{{ ssh_key }}"
       when: ssh_key is defined
@@ -244,34 +247,3 @@
          - prepare
          - apache
          - download_repos 
-
-### FINAL STEPS FINAL STEPS FINAL STEPS FINAL STEPS FINAL STEPS FINAL STEPS FINAL STEPS
-#### FINAL STEPS FINAL STEPS FINAL STEPS FINAL STEPS FINAL STEPS FINAL STEPS FINAL STEPS
-- name: (FINAL STEPS) Removing SSH Outside acess
-  hosts: localhost
-  connection: local
-  gather_facts: False
-  vars_files:
-     - gce/authentication
-     - gce/defaults
-     - notification/slack_authentication
-  tasks:
-     - include: commons/setting_defaults.yaml
-       tags:
-          - always
-
-     - name: Removing SSH capability from{{ ':' }} {{ openshift_repository_name }}
-       gce_tag:
-         instance_name: "{{ openshift_repository_name }}"
-         tags: "enable-ssh"
-         state: "absent"
-         zone: "{{ zone }}"
-         project_id: "{{ gce_project_id }}"
-         pem_file: "{{ gce_credentials_file }}"
-         service_account_email: "{{ gce_service_account_email }}"
-       tags:
-          - final_step
-
-     - name: Notifying by Slack about sucessfully deletion
-       slack: token={{ default_slack_token }} msg="TestDrive{{ ':' }} {{ openshift_repository_name }} is ready to go"
-       when: default_slack_token is defined and default_slack_token is not none

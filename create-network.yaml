@@ -9,7 +9,7 @@
   vars:
      openshift_firewall_rules:
          - { name: "enable-ssh", allow: "tcp:22",          range: "0.0.0.0/0", tag: "enable-ssh" }
-         - { name: "master",     allow: "tcp:8443,9090",   range: "0.0.0.0/0", tag: "openshift-master" }
+         - { name: "master",     allow: "tcp:8443,9090,80,443",   range: "0.0.0.0/0", tag: "openshift-master" }
          - { name: "infranode",  allow: "tcp:80,443,1936", range: "0.0.0.0/0", tag: "openshift-infra-node" }
          - { name: "glusternode",  allow: "tcp:80,443,1936", range: "0.0.0.0/0", tag: "openshift-gluster-node" }
      openshift_firewall_rules_apply_to_all:

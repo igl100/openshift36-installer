@@ -23,16 +23,23 @@
 - name: Getting OpenShift's Master Public IP{{ ':' }} {{ routers_lb_instance_creation.instance_data[0].public_ip }}
   set_fact: openshift_routers_lb_public_ip={{ routers_lb_instance_creation.instance_data[0].public_ip }}
 
+- name: Getting OpenShift's Router LB Private IP{{ ':' }} {{ routers_lb_instance_creation.instance_data[0].private_ip }}
+  set_fact: openshift_routers_lb_private_ip={{ routers_lb_instance_creation.instance_data[0].private_ip }}
+  tags:
+     - create_router_lb
+
 - name: Wait for OpenShift's Master instance to be up{{ ':' }} {{ openshift_routers_lb_public_ip }}
   wait_for: host="{{ openshift_routers_lb_public_ip }}" port={{ ssh_default_image_port }} delay={{ instance_validate_delay }}  state=started
   tags:
      - create_masters
 
+#"
 - name: Adding OpenShift's Master into group{{ ':' }} openshift_hosts
   add_host: groups=openshift_router_lb_group hostname={{ openshift_routers_lb_public_ip }}
+            private_ip={{ openshift_routers_lb_private_ip}} instance_name={{ openshift_routers_lb }}{{ counter }}
+            public_ip={{ openshift_routers_lb_public_ip }}
             ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }}
             ansible_port={{ ssh_default_image_port }}
   tags:
-     - create_masters
-
+     - create_router_lb
 

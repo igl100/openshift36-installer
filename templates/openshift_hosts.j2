@@ -2,23 +2,68 @@
 masters
 nodes
 etcd
-lb
 glusterfs
 glusterfs_registry
+lb
 
 [OSEv3:vars]
 deployment_type=openshift-enterprise
 ansible_ssh_user=root
-# openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift-passwords'}]
-# openshift_master_htpasswd_users={'demo': '$apr1$ucdyfv6b$EJFanTIfig6LR8cszOnKV0', ‘dv’: '$apr1$cUEhxniK$.dvXBcd9XE6BmSpeWnb2o.'}
 openshift_hosted_router_selector='host=infra'
 openshift_router_selector='host=infra'
 openshift_hosted_registry_selector='host=infra'
 openshift_registry_selector='host=infra'
 openshift_hosted_metrics_deploy=true
 openshift_metrics_install_metrics=true
-openshift_master_metrics_public_url=https://hawkular-metrics.cloudapps.testdrive.com/hawkular/metrics
 containerized=false
 openshift_hosted_logging_deploy=true
 openshift_hosted_registry_storage_kind=glusterfs
+openshift_master_api_port=443
+openshift_master_console_port=443
 openshift_master_cluster_method=native
+{% for host in groups['openshift_router_lb_group'] %}
+openshift_master_metrics_public_url=https://hawkular-metrics.apps.{{ openshift_subdomain }}/hawkular/metrics
+openshift_master_default_subdomain=apps.{{ openshift_subdomain }}
+{% endfor %}
+{% for host in groups['openshift_master_lb_group'] %}
+openshift_master_public_hostname=console.{{ openshift_subdomain }}
+{% endfor %}
+
+[masters]
+{% for host in groups['openshift_master_group'] %}
+{{ hostvars[host].instance_name }} node=True storage=True master=True
+{% endfor %}
+
+[nodes]
+{% for host in groups['openshift_master_group'] %}
+{{ hostvars[host].instance_name }} node=True storage=True master=True openshift_schedulable=False
+{% endfor %}
+{% for host in groups['openshift_infra_group'] %}
+{{ hostvars[host].instance_name }} openshift_node_labels="{'host': 'infra'}" node=True openshift_schedulable=True
+{% endfor %}
+{% for host in groups['openshift_node_group'] %}
+{{ hostvars[host].instance_name }} openshift_node_labels="{'host': 'apps'}" node=True openshift_schedulable=True  
+{% endfor %}
+{% for host in groups['openshift_gluster_group'] %}
+{{ hostvars[host].instance_name }} openshift_node_labels="{'host': 'apps'}" node=True openshift_schedulable=True
+{% endfor %}
+
+[etcd]
+{% for host in groups['openshift_master_group'] %}
+{{ hostvars[host].instance_name }} node=True storage=True master=True
+{% endfor %}
+
+[glusterfs]
+{% for host in groups['openshift_gluster_group'] %}
+{{ hostvars[host].instance_name }} glusterfs_devices='["/dev/sdc"]'
+{% endfor %}
+
+[glusterfs_registry]
+{% for host in groups['openshift_infra_group'] %}
+{{ hostvars[host].instance_name }} glusterfs_devices='["/dev/sdc"]'
+{% endfor %}
+
+[lb]
+{% for host in groups['openshift_master_lb_group'] %}
+{{ hostvars[host].instance_name }}
+{% endfor %}

@@ -48,7 +48,7 @@
 
 - name: Adding masters group to inventory
   lineinfile: 
-           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
            path: "./tmp/hosts"
   with_items: "{{ masters }}"
   tags:
@@ -64,7 +64,7 @@
 
 - name: Adding infra group to inventory
   lineinfile: 
-           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
            path: "./tmp/hosts"
   with_items: "{{ infras }}"
   tags:
@@ -80,7 +80,7 @@
 
 - name: Adding infra group to inventory
   lineinfile: 
-           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
            path: "./tmp/hosts"
   with_items: "{{ glusters }}"
   tags:
@@ -96,7 +96,7 @@
 
 - name: Adding node group to inventory
   lineinfile: 
-           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
            path: "./tmp/hosts"
   with_items: "{{ nodes }}"
   tags:
@@ -112,7 +112,7 @@
 
 - name: Adding master load balancer group to inventory
   lineinfile: 
-           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
            path: "./tmp/hosts"
   with_items: "{{ masters_lb }}"
   tags:
@@ -128,9 +128,8 @@
 
 - name: Adding router load balancer group to inventory
   lineinfile: 
-           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
+           line: "{{ item }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}"
            path: "./tmp/hosts"
   with_items: "{{ routers_lb }}"
   tags:
      - generating_inventory
-
