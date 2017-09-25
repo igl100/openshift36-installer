@@ -1,3 +1,16 @@
+# CREATING STATIC IP ADDRESS FOR ROUTER LB
+- name: Creating static IP for router lb
+  gce_eip:
+    service_account_email: "{{ gce_service_account_email }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    project_id: "{{ gce_project_id }}"
+    name: "{{ openshift_routers_lb }}{{ counter }}"
+    region: "{{ gce_default_region }}"
+    state: present
+  register: route_lb_ip
+  tags:
+     - create_masters_balancer
+
 ### CREATE MASTERS TASKS
 - name: Creating instance {{ ':' }} {{ openshift_routers_lb }}{{ counter }}
   gce:
@@ -8,6 +21,7 @@
     zone: "{{ zone }}"
     network: "{{ network_name }}"
     subnetwork: "{{ subnetwork_name }}"
+    external_ip: "{{ route_lb_ip }}"
     tags: ["enable-ssh","openshift-master"]
     disk_auto_delete: True
     project_id: "{{ gce_project_id }}"

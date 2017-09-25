@@ -1,3 +1,16 @@
+# CREATING STATIC IP ADDRESS FOR MASTER
+- name: Creating static IP for master
+  gce_eip:
+    service_account_email: "{{ gce_service_account_email }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    project_id: "{{ gce_project_id }}"
+    name: "{{ openshift_master }}{{ counter }}"
+    region: "{{ gce_default_region }}"
+    state: present
+  register: master_ip
+  tags:
+     - create_masters
+
 ### CREATE MASTERS TASKS
 - name: Creating instance {{ ':' }} {{ openshift_master }}{{ counter }}
   gce:
@@ -5,6 +18,7 @@
     state: "present"
     machine_type: "{{ master_machine_type }}"
     image: "{{ image }}"
+    external_ip: "{{ master_ip.address }}"
     zone: "{{ zone }}"
     network: "{{ network_name }}"
     subnetwork: "{{ subnetwork_name }}"

@@ -54,6 +54,7 @@
        with_sequence: count={{ master_nodes }}
        tags:
           - create_servers
+          - generating_inventory
 
 ### CREATE INFRA NODES
      - name: Creating infra
@@ -61,6 +62,7 @@
        with_sequence: count={{ infra_nodes }}
        tags:
           - create_servers
+          - generating_inventory
 
 ### CREATE GLUSTER NODES
      - name: Creating gluster
@@ -68,6 +70,7 @@
        with_sequence: count={{ gluster_nodes }}
        tags:
           - create_servers
+          - generating_inventory
 
 ### CREATE NODES
      - name: Creating nodes
@@ -75,6 +78,7 @@
        with_sequence: count={{ process_nodes }}
        tags:
           - create_servers
+          - generating_inventory
 
 ### CREATE MASTERS LOAD BALANCER
      - name: Creating masters load balancer
@@ -82,6 +86,7 @@
        with_sequence: count={{ masters_balancers }}
        tags:
           - create_servers
+          - generating_inventory
 
 ### CREATE ROUTES BALANCERS
      - name: Creating router load balancer
@@ -89,32 +94,35 @@
        with_sequence: count={{ routers_balancers }}
        tags:
           - create_servers
-
-     - name: Saving inventory to hosts file
-       include: ./create-inventory.yaml
-       tags:
           - generating_inventory
 
-### CREATING INVENTORY FILE FOR FUTURE RUNS
-#- name: Creating inventory file
-#  hosts: localhost
-#  gather_facts: False
-#  vars_files:
-#     - settings/authentications
-#     - settings/defaults
-#  tasks:
-#      - name: Saving inventory to hosts file
-#        include: ./create-inventory.yaml
-#        tags:
-#           - generating_inventory
+### CREATE DNS CONFIGS
+     - name: Creating DNS configurations
+       include: ./create-dns.yaml
+       tags:
+          - create_dns
 
+### CREATE INVENTORY FILE
+     - name: Deleting old hosts file
+       file:
+          path: "./tmp/hosts"
+          state: absent
+       ignore_errors: True
+       tags: 
+          - generating_inventory
+
+     - name: Copying Openshift file template
+       template:
+          src: "./templates/inventory_hosts.j2"
+          dest: "./tmp/hosts"
+       tags:
+          - generating_inventory
 
 ### DELETING OLD KEYS
 - name: Setting up keys
   hosts: all
   gather_facts: False
   tasks:
-
       - name: Searching for keys
         find:
            paths: /root/.ssh/

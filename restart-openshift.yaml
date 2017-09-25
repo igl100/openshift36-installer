@@ -1,0 +1,65 @@
+---
+- name: Restarting OpenShift Masters
+  hosts: openshift_master_group
+  gather_facts: False
+  vars_files:
+     - settings/authentications
+     - settings/defaults
+  tasks:
+     - name: Setting Variables
+       include: ./commons.yaml
+       tags:
+           - always
+
+     - name: Restarting Openshift masters
+       service: name=atomic-openshift-master-api state=restarted
+       tags:
+           - masters_api_restart
+           - masters_restart
+           - restart_all
+
+     - name: Restarting Openshift masters controllers
+       service: name=atomic-openshift-master-api state=restarted
+       tags:
+           - masters_controllers
+           - masters_restart
+           - restart_all
+
+- name: Restarting OpenShift Nodes
+  hosts: openshift_node_group
+  gather_facts: False
+  vars_files:
+      - settings/authentications
+      - settings/defaults
+  tasks:
+      - name: Restarting Openshift masters
+        service: name=atomic-openshift-node state=restarted
+        tags:
+           - nodes_restart
+           - restart_all
+
+- name: Restarting OpenShift Infra
+  hosts: openshift_node_group
+  gather_facts: False
+  vars_files:
+     - settings/authentications
+     - settings/defaults
+  tasks:
+      - name: Restarting Openshift Infra
+        service: name=atomic-openshift-node state=restarted
+        tags:
+           - infra_restart
+           - restart_all
+
+- name: Restarting OpenShift Gluster
+  hosts: openshift_node_group
+  gather_facts: False
+  vars_files:
+      - settings/authentications
+      - settings/defaults
+  tasks:
+      - name: Restarting Openshift gluster
+        service: name=atomic-openshift-node state=restarted
+        tags:
+           - nodes_restart
+           - restart_all

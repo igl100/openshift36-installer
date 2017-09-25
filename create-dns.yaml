@@ -1,0 +1,47 @@
+# CREATING DNS ZONE
+- name: Create a basic zone with the minimum number of parameters.
+  gcdns_zone: 
+    zone: "{{openshift_dns_zone}}"
+    service_account_email: "{{ gce_service_account_email }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    project_id: "{{ gce_project_id }}"
+  ignore_errors: true
+  tags:
+    - create_dns
+
+### "CREATE DNS CONFIG
+- name: Retriving Infra node LB host
+  set_fact: infra_lb={{ groups[['openshift_router_lb_group'][0]] }}
+  tags:
+    - create_dns
+
+- name: Creating routes LB DNS config
+  gcdns_record:
+    service_account_email: "{{ gce_service_account_email }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    project_id: "{{ gce_project_id }}"
+    record: '*.apps.{{openshift_subdomain}}'
+    zone: '{{openshift_dns_zone}}'
+    type: A
+    overwrite: true
+    value: '{{ infra_lb[0] }}'
+  tags:
+    - create_dns
+
+- name: Retriving Master node LB host
+  set_fact: masters_lb={{ groups[['openshift_master_lb_group'][0]] }}
+  tags:
+    - create_dns
+
+- name: Creating masters LB DNS config
+  gcdns_record:
+    service_account_email: "{{ gce_service_account_email }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    project_id: "{{ gce_project_id }}"
+    record: 'console.{{openshift_subdomain}}'
+    zone: '{{openshift_dns_zone}}'
+    type: A
+    overwrite: true
+    value: '{{ masters_lb[0] }}'
+  tags:
+    - create_dns

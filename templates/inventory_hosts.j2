@@ -1,9 +1,36 @@
 [all]
 {% for item in groups['all'] %}
-{{item}}
+{{ item }}
+{% endfor %}
+
+[openshift_gluster_group]
+{% for entry in groups['openshift_gluster_group'] %}
+{{ entry }} hostname={{ entry }} instance_name={{ hostvars[entry]['instance_name'] }} public_ip={{ hostvars[entry]['public_ip'] }} private_ip={{ hostvars[entry]['private_ip'] }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}
+{% endfor %}
+
+[openshift_infra_group]
+{% for entry in groups['openshift_infra_group'] %}
+{{ entry }} hostname={{ entry }} instance_name={{ hostvars[entry]['instance_name'] }} public_ip={{ hostvars[entry]['public_ip'] }} private_ip={{ hostvars[entry]['private_ip'] }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}
 {% endfor %}
 
 [openshift_master_group]
 {% for entry in groups['openshift_master_group'] %}
-{{ entry.hostname }} instance_name={{ entry.instance_name }} private_ip={{ entry.private_ip }} public_ip={{ entry.public_ip }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}
+{{ entry }} hostname={{ entry }} instance_name={{ hostvars[entry]['instance_name'] }} public_ip={{ hostvars[entry]['public_ip'] }} private_ip={{ hostvars[entry]['private_ip'] }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}
 {% endfor %}
+
+[openshift_master_lb_group]
+{% for entry in groups['openshift_master_lb_group'] %}
+{{ entry }} hostname={{ entry }} instance_name={{ hostvars[entry]['instance_name'] }} public_ip={{ hostvars[entry]['public_ip'] }} private_ip={{ hostvars[entry]['private_ip'] }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}
+{% endfor %}
+
+[openshift_node_group]
+{% for entry in groups['openshift_node_group'] %}
+{{ entry }} hostname={{ entry }} instance_name={{ hostvars[entry]['instance_name'] }} public_ip={{ hostvars[entry]['public_ip'] }} private_ip={{ hostvars[entry]['private_ip'] }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}
+{% endfor %}
+
+[openshift_router_lb_group]
+{% for entry in groups['openshift_router_lb_group'] %}
+{{ entry }} hostname={{ entry }} instance_name={{ hostvars[entry]['instance_name'] }} public_ip={{ hostvars[entry]['public_ip'] }} private_ip={{ hostvars[entry]['private_ip'] }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}
+{% endfor %}
+
+
