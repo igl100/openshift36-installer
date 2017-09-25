@@ -4,8 +4,8 @@
   connection: local
   gather_facts: False
   vars_files:
-     - gce/authentication
-     - gce/defaults
+     - settings/authentications
+     - settings/defaults
   vars:
      openshift_firewall_rules:
          - { name: "enable-ssh", allow: "tcp:22",          range: "0.0.0.0/0", tag: "enable-ssh" }
@@ -15,7 +15,7 @@
      openshift_firewall_rules_apply_to_all:
          - { name: "internal-node-communication", range: "{{ subnetwork_range }}" }
   tasks:
-    - include: commons/setting_defaults.yaml
+    - include: ./commons.yaml
       tags:
          - always
 
