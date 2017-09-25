@@ -12,9 +12,9 @@
      - repository_storage_size: 30
   tasks:
     - name: Setting Variables
-       include: ./commons.yaml
-       tags:
-          - always
+      include: ./commons.yaml
+      tags:
+         - always
 
     - fail: msg="redhat_subscription_username is not defined"
       when: redhat_subscription_username is not defined
