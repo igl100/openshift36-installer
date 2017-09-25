@@ -21,13 +21,13 @@
     zone: "{{ zone }}"
     network: "{{ network_name }}"
     subnetwork: "{{ subnetwork_name }}"
-    external_ip: "{{ master_lb_ip }}"
+    external_ip: "{{ master_lb_ip.address }}"
     tags: ["enable-ssh","openshift-master"]
     disk_auto_delete: True
     project_id: "{{ gce_project_id }}"
     credentials_file: "{{ gce_credentials_file }}"
     service_account_email: "{{ gce_service_account_email }}"
-  ignore_errors: True
+  ignore_errors: False
   register: master_lb_instance_creation
   tags:
      - create_masters_balancer
@@ -36,6 +36,8 @@
 
 - name: Getting OpenShift's Master Public IP{{ ':' }} {{ master_lb_instance_creation.instance_data[0].public_ip }}
   set_fact: openshift_master_lb_public_ip={{ master_lb_instance_creation.instance_data[0].public_ip }}
+  tags:
+     - create_masters_balancer
 
 - name: Getting OpenShift's Master LB Private IP{{ ':' }} {{ master_instance_creation.instance_data[0].private_ip }}
   set_fact: openshift_master_private_ip={{ master_instance_creation.instance_data[0].private_ip }}
