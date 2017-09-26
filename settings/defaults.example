@@ -15,6 +15,7 @@ ssh_default_image_password: r3dh4t1!
 ssh_default_image_port: 22
 openshift_repository_ip: 192.168.0.2
 openshift_subdomain: cloudapps.ospinfra.com
+openshift_dns_zone: ospinfra.com
 email: <<your@email>>
 prefix_id: ose
 name: “Your Name”
