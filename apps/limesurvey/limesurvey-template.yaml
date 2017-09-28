@@ -1,0 +1,221 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: limesurvey-template
+  annotations:
+    openshift.io/display-name: "Limesurvey App with MySQL Persistent"
+    description: "Template to create limesurvey service using mysql persistent data"
+    tags: "limesurvey"
+parameters:
+  - name: APP_NAME
+    description: "name of application"
+    value: limesurvey
+  - name: DATABASE_PASSWORD
+    description: "Password used for MySQL authentication"
+    from: '[A-Z0-9]{8}'
+    generate: expression
+  - name: DATABASE_TYPE
+    description: "Database angine to use"
+    value: "mysql"
+  - name: DATABASE_USER
+    description: "User used for MySQL authentication"
+    value: "limesurvey"
+  - name: DATABASE_URL
+    description: "Database service"
+    value: "limesurvey-md"
+  - name: DATABASE_NAME
+    description: "Database name"
+    value: "limesurvey"
+  - name: DATABASE_PORT
+    description: "Database service port"
+    value: "3306"
+objects:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        service.alpha.openshift.io/dependencies: '[{"name": "limesurvey-md", "namespace": "", "kind": "Service"}]'
+        service.openshift.io/infrastructure: "true"
+      labels:
+        app: limesurvey
+        tiers: frontend
+      name: limesurvey
+    spec:
+      ports:
+      - name: http
+        port: 80
+        targetPort: 80
+        protocol: TCP
+      selector:
+        app: limesurvey
+        tiers: frontend
+      type: NodePort
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: limesurvey
+        tiers: backend
+      name: limesurvey-md
+    spec:
+      ports:
+      - name: mysql
+        port: 3306
+        targetPort: 3306
+        protocol: TCP
+      selector:
+        app: limesurvey
+        tiers: backend
+      type: NodePort
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: limesurvey
+    spec:
+      to:
+        kind: Service
+        name: limesurvey
+    name: limesurvey
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      annotations:
+        volume.beta.kubernetes.io/storage-class: glusterfs-storage
+        volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
+      labels:
+        app: limesurvey
+      name: limesurvey-upload
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      annotations:
+        volume.beta.kubernetes.io/storage-class: glusterfs-storage
+        volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
+      labels:
+        app: limesurvey
+      name: limesurvey-db
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      annotations:
+        volume.beta.kubernetes.io/storage-class: glusterfs-storage
+        volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
+      labels:
+        app: limesurvey
+      name: limesurvey-dblog
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+    status: {}
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      name: limesurvey-md
+    spec:
+      replicas: 1
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          labels:
+            app: limesurvey
+            tiers: backend
+        spec:
+          containers:
+          - image: registry.access.redhat.com/rhscl/mysql-57-rhel7
+            name: limesurvey-md
+            env:
+            - name: MYSQL_DATABASE
+              value: ${DATABASE_NAME}
+            - name: MYSQL_USER
+              value: ${DATABASE_USER}
+            - name: MYSQL_ROOT_PASSWORD
+              value: ${DATABASE_PASSWORD}
+            - name: MYSQL_PASSWORD
+              value: ${DATABASE_PASSWORD}
+            ports:
+            - containerPort: 3306
+              name: mysql
+            volumeMounts:
+            - mountPath: /var/lib/mysql/data
+              name: limesurvey-db
+              subPath: limesurvey-db
+            - mountPath: /var/log/mysql
+              name: limesurvey-dblog
+              subPath: limesurvey-dblog
+          volumes:
+          - name: limesurvey-db
+            persistentVolumeClaim:
+              claimName: limesurvey-db
+          - name: limesurvey-dblog
+            persistentVolumeClaim:
+              claimName: limesurvey-dblog
+    status: {}
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      name: limesurvey
+    spec:
+      replicas: 1
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          labels:
+            app: limesurvey
+            tiers: frontend
+        spec:
+          containers:
+          - image: fjudith/limesurvey
+            name: limesurvey
+            env: 
+            - name: TERM
+              value: xterm
+            - name: DB_NAME
+              value: ${DATABASE_NAME}
+            - name: DB_USERNAME
+              value: ${DATABASE_USER}
+            - name: DB_PASSWORD
+              value: ${DATABASE_PASSWORD}
+            - name: DB_HOST
+              value: ${DATABASE_URL}
+            - name: DB_PORT
+              value: ${DATABASE_PORT}
+            ports:
+            - containerPort: 80
+              name: http
+            volumeMounts:
+            - mountPath: /var/www/html/upload
+              name: limesurvey-upload
+              subPath: limesurvey-upload
+            livenessProbe:
+                tcpSocket:
+                  port: 80
+                initialDelaySeconds: 60
+                timeoutSeconds: 5
+            readinessProbe:
+                tcpSocket:
+                  port: 80
+                timeoutSeconds: 5
+          volumes:
+          - name: limesurvey-upload
+            persistentVolumeClaim:
+              claimName: limesurvey-upload
+    status: {}

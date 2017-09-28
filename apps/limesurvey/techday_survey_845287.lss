@@ -1,0 +1,957 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+ <LimeSurveyDocType>Survey</LimeSurveyDocType>
+ <DBVersion>263</DBVersion>
+ <languages>
+  <language>es-MX</language>
+ </languages>
+ <groups>
+  <fields>
+   <fieldname>gid</fieldname>
+   <fieldname>sid</fieldname>
+   <fieldname>group_name</fieldname>
+   <fieldname>group_order</fieldname>
+   <fieldname>description</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>randomization_group</fieldname>
+   <fieldname>grelevance</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <gid><![CDATA[2]]></gid>
+    <sid><![CDATA[845287]]></sid>
+    <group_name><![CDATA[Información Personal]]></group_name>
+    <group_order><![CDATA[0]]></group_order>
+    <description><![CDATA[Solicitamos sólo algunos datos personales.]]></description>
+    <language><![CDATA[es-MX]]></language>
+    <randomization_group/>
+    <grelevance/>
+   </row>
+   <row>
+    <gid><![CDATA[3]]></gid>
+    <sid><![CDATA[845287]]></sid>
+    <group_name><![CDATA[Prioridades del Negocio]]></group_name>
+    <group_order><![CDATA[1]]></group_order>
+    <description><![CDATA[Este grupo permite entender las prioridades del negocio.]]></description>
+    <language><![CDATA[es-MX]]></language>
+    <randomization_group/>
+    <grelevance/>
+   </row>
+   <row>
+    <gid><![CDATA[4]]></gid>
+    <sid><![CDATA[845287]]></sid>
+    <group_name><![CDATA[Prioridades de Administración]]></group_name>
+    <group_order><![CDATA[2]]></group_order>
+    <description><![CDATA[Permite conocer las prioridades en administración y operación.]]></description>
+    <language><![CDATA[es-MX]]></language>
+    <randomization_group/>
+    <grelevance/>
+   </row>
+   <row>
+    <gid><![CDATA[5]]></gid>
+    <sid><![CDATA[845287]]></sid>
+    <group_name><![CDATA[Prioridades en Tecnología]]></group_name>
+    <group_order><![CDATA[3]]></group_order>
+    <description><![CDATA[Permite conocer las prioridades en tecnología.]]></description>
+    <language><![CDATA[es-MX]]></language>
+    <randomization_group/>
+    <grelevance/>
+   </row>
+  </rows>
+ </groups>
+ <questions>
+  <fields>
+   <fieldname>qid</fieldname>
+   <fieldname>parent_qid</fieldname>
+   <fieldname>sid</fieldname>
+   <fieldname>gid</fieldname>
+   <fieldname>type</fieldname>
+   <fieldname>title</fieldname>
+   <fieldname>question</fieldname>
+   <fieldname>preg</fieldname>
+   <fieldname>help</fieldname>
+   <fieldname>other</fieldname>
+   <fieldname>mandatory</fieldname>
+   <fieldname>question_order</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>scale_id</fieldname>
+   <fieldname>same_default</fieldname>
+   <fieldname>relevance</fieldname>
+   <fieldname>modulename</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <qid><![CDATA[4]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[2]]></gid>
+    <type><![CDATA[S]]></type>
+    <title><![CDATA[NOMBRE]]></title>
+    <question><![CDATA[Nombre Completo]]></question>
+    <preg/>
+    <help><![CDATA[Por favor ingresa tu nombre completo]]></help>
+    <other><![CDATA[N]]></other>
+    <mandatory><![CDATA[Y]]></mandatory>
+    <question_order><![CDATA[1]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[5]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[2]]></gid>
+    <type><![CDATA[S]]></type>
+    <title><![CDATA[ROL]]></title>
+    <question><![CDATA[Puesto/Rol]]></question>
+    <preg/>
+    <help><![CDATA[Por favor ingresa tu puesto o rol.]]></help>
+    <other><![CDATA[N]]></other>
+    <mandatory><![CDATA[Y]]></mandatory>
+    <question_order><![CDATA[2]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[6]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[2]]></gid>
+    <type><![CDATA[S]]></type>
+    <title><![CDATA[CORREO]]></title>
+    <question><![CDATA[Correo Electrónico]]></question>
+    <preg/>
+    <help><![CDATA[Por favor ingresa tu correo electrónico de contacto]]></help>
+    <other><![CDATA[N]]></other>
+    <mandatory><![CDATA[Y]]></mandatory>
+    <question_order><![CDATA[3]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[7]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[A]]></type>
+    <title><![CDATA[NEG]]></title>
+    <question><![CDATA[Prioridad para el negocio]]></question>
+    <preg/>
+    <help><![CDATA[Selecciona las 5 prioridades que consideras para el negocio y ordenalas en prioridad del 1 al 5.]]></help>
+    <other><![CDATA[N]]></other>
+    <mandatory><![CDATA[Y]]></mandatory>
+    <question_order><![CDATA[1]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[19]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[A]]></type>
+    <title><![CDATA[ADM]]></title>
+    <question><![CDATA[Administración]]></question>
+    <preg/>
+    <help><![CDATA[Selecciona las 5 prioridades que consideras para la administración y continuidad de la operación. Ordénalas en prioridad del 1 al 5.]]></help>
+    <other><![CDATA[N]]></other>
+    <mandatory><![CDATA[Y]]></mandatory>
+    <question_order><![CDATA[1]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[30]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[A]]></type>
+    <title><![CDATA[TECH]]></title>
+    <question><![CDATA[Tecnología]]></question>
+    <preg/>
+    <help><![CDATA[Selecciona las 5 prioridades tecnológicas que consideras y ordénalas en prioridad del 1 al 5.]]></help>
+    <other><![CDATA[N]]></other>
+    <mandatory><![CDATA[Y]]></mandatory>
+    <question_order><![CDATA[1]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+    <modulename/>
+   </row>
+  </rows>
+ </questions>
+ <subquestions>
+  <fields>
+   <fieldname>qid</fieldname>
+   <fieldname>parent_qid</fieldname>
+   <fieldname>sid</fieldname>
+   <fieldname>gid</fieldname>
+   <fieldname>type</fieldname>
+   <fieldname>title</fieldname>
+   <fieldname>question</fieldname>
+   <fieldname>preg</fieldname>
+   <fieldname>help</fieldname>
+   <fieldname>other</fieldname>
+   <fieldname>mandatory</fieldname>
+   <fieldname>question_order</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>scale_id</fieldname>
+   <fieldname>same_default</fieldname>
+   <fieldname>relevance</fieldname>
+   <fieldname>modulename</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <qid><![CDATA[9]]></qid>
+    <parent_qid><![CDATA[7]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[NEG01]]></title>
+    <question><![CDATA[Aumentar el crecimiento organizacional.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[1]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[10]]></qid>
+    <parent_qid><![CDATA[7]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[NEG02]]></title>
+    <question><![CDATA[Diferenciación organizacional y reconocimiento.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[2]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[11]]></qid>
+    <parent_qid><![CDATA[7]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[NEG03]]></title>
+    <question><![CDATA[Mejorar tecnología (apps. e infraestructura de TIC).]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[3]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[12]]></qid>
+    <parent_qid><![CDATA[7]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[NEG04]]></title>
+    <question><![CDATA[Desarrollo asociaciones y alianzas diversas y dinámicas.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[4]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[13]]></qid>
+    <parent_qid><![CDATA[7]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[NEG05]]></title>
+    <question><![CDATA[Innovación: pensar, trabajar y crear lo nuevo y diferente.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[5]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[14]]></qid>
+    <parent_qid><![CDATA[7]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[NEG06]]></title>
+    <question><![CDATA[Control presupuesto y costos.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[6]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[15]]></qid>
+    <parent_qid><![CDATA[7]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[NEG07]]></title>
+    <question><![CDATA[Gestión de talento y cultura.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[7]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[16]]></qid>
+    <parent_qid><![CDATA[7]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[NEG08]]></title>
+    <question><![CDATA[Big Data para interpretar, planear y decidir el futuro.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[8]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[17]]></qid>
+    <parent_qid><![CDATA[7]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[NEG09]]></title>
+    <question><![CDATA[Agilidad / Adaptabilidad / Flexibilidad.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[9]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[18]]></qid>
+    <parent_qid><![CDATA[7]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[3]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[NEG10]]></title>
+    <question><![CDATA[Identificar tendencias, oportunidades, servicios, lugares.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[10]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[20]]></qid>
+    <parent_qid><![CDATA[19]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[ADM01]]></title>
+    <question><![CDATA[Entregar proyectos de crecimiento y posicionamiento.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[1]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[21]]></qid>
+    <parent_qid><![CDATA[19]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[ADM02]]></title>
+    <question><![CDATA[Ligar planes y estrategias del área con los organizacionales.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[2]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[22]]></qid>
+    <parent_qid><![CDATA[19]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[ADM03]]></title>
+    <question><![CDATA[Atraer y retener el personal de área mejorando habilidades suaves de gestión.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[3]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[23]]></qid>
+    <parent_qid><![CDATA[19]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[ADM04]]></title>
+    <question><![CDATA[Mejorar la calidad de entrega de los servicios del área.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[4]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[24]]></qid>
+    <parent_qid><![CDATA[19]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[ADM05]]></title>
+    <question><![CDATA[Implementar mejoras e innovación a procesos del área.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[5]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[25]]></qid>
+    <parent_qid><![CDATA[19]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[ADM06]]></title>
+    <question><![CDATA[Implementar mejoras a la gobernabilidad y uso de métricas en el área.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[6]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[26]]></qid>
+    <parent_qid><![CDATA[19]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[ADM07]]></title>
+    <question><![CDATA[Reducir costos de operación del área.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[7]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[27]]></qid>
+    <parent_qid><![CDATA[19]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[ADM08]]></title>
+    <question><![CDATA[Consolidad y administrar una infraestructura y operación flexible y ágil.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[8]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[28]]></qid>
+    <parent_qid><![CDATA[19]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[ADM09]]></title>
+    <question><![CDATA[Reducir la complejidad y riesgos. Operación simple y eficiente.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[9]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[29]]></qid>
+    <parent_qid><![CDATA[19]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[4]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[ADM10]]></title>
+    <question><![CDATA[Desarrollar una cultura de innovación y valor en el área.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[10]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[31]]></qid>
+    <parent_qid><![CDATA[30]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[TECH01]]></title>
+    <question><![CDATA[Seguridad.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[1]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[32]]></qid>
+    <parent_qid><![CDATA[30]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[TECH02]]></title>
+    <question><![CDATA[Cloud services.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[2]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[33]]></qid>
+    <parent_qid><![CDATA[30]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[TECH03]]></title>
+    <question><![CDATA[Consolidar, virtualizar y optimizar.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[3]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[34]]></qid>
+    <parent_qid><![CDATA[30]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[TECH04]]></title>
+    <question><![CDATA[Networking, conectividad, banda ancha y wireless.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[4]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[35]]></qid>
+    <parent_qid><![CDATA[30]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[TECH05]]></title>
+    <question><![CDATA[Big Data, analítiaca e inteligencia de negocio BI.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[5]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[36]]></qid>
+    <parent_qid><![CDATA[30]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[TECH06]]></title>
+    <question><![CDATA[Tecnologías móviles (mobility y big mobility).]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[6]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[37]]></qid>
+    <parent_qid><![CDATA[30]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[TECH07]]></title>
+    <question><![CDATA[DRP/BCP (Continuidad del negocio).]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[7]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[38]]></qid>
+    <parent_qid><![CDATA[30]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[TECH08]]></title>
+    <question><![CDATA[Tecnologías de colaboración.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[8]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[39]]></qid>
+    <parent_qid><![CDATA[30]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[TECH09]]></title>
+    <question><![CDATA[Soluciones de gestión y administración tecnología.]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[9]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[40]]></qid>
+    <parent_qid><![CDATA[30]]></parent_qid>
+    <sid><![CDATA[845287]]></sid>
+    <gid><![CDATA[5]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[TECH10]]></title>
+    <question><![CDATA[Aplicaciones CORE (CRM-GRP).]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[10]]></question_order>
+    <language><![CDATA[es-MX]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance/>
+    <modulename/>
+   </row>
+  </rows>
+ </subquestions>
+ <surveys>
+  <fields>
+   <fieldname>sid</fieldname>
+   <fieldname>admin</fieldname>
+   <fieldname>expires</fieldname>
+   <fieldname>startdate</fieldname>
+   <fieldname>adminemail</fieldname>
+   <fieldname>anonymized</fieldname>
+   <fieldname>faxto</fieldname>
+   <fieldname>format</fieldname>
+   <fieldname>savetimings</fieldname>
+   <fieldname>template</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>additional_languages</fieldname>
+   <fieldname>datestamp</fieldname>
+   <fieldname>usecookie</fieldname>
+   <fieldname>allowregister</fieldname>
+   <fieldname>allowsave</fieldname>
+   <fieldname>autonumber_start</fieldname>
+   <fieldname>autoredirect</fieldname>
+   <fieldname>allowprev</fieldname>
+   <fieldname>printanswers</fieldname>
+   <fieldname>ipaddr</fieldname>
+   <fieldname>refurl</fieldname>
+   <fieldname>publicstatistics</fieldname>
+   <fieldname>publicgraphs</fieldname>
+   <fieldname>listpublic</fieldname>
+   <fieldname>htmlemail</fieldname>
+   <fieldname>sendconfirmation</fieldname>
+   <fieldname>tokenanswerspersistence</fieldname>
+   <fieldname>assessments</fieldname>
+   <fieldname>usecaptcha</fieldname>
+   <fieldname>usetokens</fieldname>
+   <fieldname>bounce_email</fieldname>
+   <fieldname>attributedescriptions</fieldname>
+   <fieldname>emailresponseto</fieldname>
+   <fieldname>emailnotificationto</fieldname>
+   <fieldname>tokenlength</fieldname>
+   <fieldname>showxquestions</fieldname>
+   <fieldname>showgroupinfo</fieldname>
+   <fieldname>shownoanswer</fieldname>
+   <fieldname>showqnumcode</fieldname>
+   <fieldname>bouncetime</fieldname>
+   <fieldname>bounceprocessing</fieldname>
+   <fieldname>bounceaccounttype</fieldname>
+   <fieldname>bounceaccounthost</fieldname>
+   <fieldname>bounceaccountpass</fieldname>
+   <fieldname>bounceaccountencryption</fieldname>
+   <fieldname>bounceaccountuser</fieldname>
+   <fieldname>showwelcome</fieldname>
+   <fieldname>showprogress</fieldname>
+   <fieldname>questionindex</fieldname>
+   <fieldname>navigationdelay</fieldname>
+   <fieldname>nokeyboard</fieldname>
+   <fieldname>alloweditaftercompletion</fieldname>
+   <fieldname>googleanalyticsstyle</fieldname>
+   <fieldname>googleanalyticsapikey</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <sid><![CDATA[845287]]></sid>
+    <admin><![CDATA[Administrator]]></admin>
+    <adminemail><![CDATA[your-email@example.net]]></adminemail>
+    <anonymized><![CDATA[N]]></anonymized>
+    <faxto/>
+    <format><![CDATA[G]]></format>
+    <savetimings><![CDATA[Y]]></savetimings>
+    <template><![CDATA[default]]></template>
+    <language><![CDATA[es-MX]]></language>
+    <additional_languages/>
+    <datestamp><![CDATA[Y]]></datestamp>
+    <usecookie><![CDATA[N]]></usecookie>
+    <allowregister><![CDATA[N]]></allowregister>
+    <allowsave><![CDATA[Y]]></allowsave>
+    <autonumber_start><![CDATA[2]]></autonumber_start>
+    <autoredirect><![CDATA[N]]></autoredirect>
+    <allowprev><![CDATA[N]]></allowprev>
+    <printanswers><![CDATA[N]]></printanswers>
+    <ipaddr><![CDATA[N]]></ipaddr>
+    <refurl><![CDATA[N]]></refurl>
+    <publicstatistics><![CDATA[N]]></publicstatistics>
+    <publicgraphs><![CDATA[N]]></publicgraphs>
+    <listpublic><![CDATA[N]]></listpublic>
+    <htmlemail><![CDATA[Y]]></htmlemail>
+    <sendconfirmation><![CDATA[Y]]></sendconfirmation>
+    <tokenanswerspersistence><![CDATA[N]]></tokenanswerspersistence>
+    <assessments><![CDATA[N]]></assessments>
+    <usecaptcha><![CDATA[N]]></usecaptcha>
+    <usetokens><![CDATA[N]]></usetokens>
+    <bounce_email><![CDATA[your-email@example.net]]></bounce_email>
+    <emailresponseto/>
+    <emailnotificationto/>
+    <tokenlength><![CDATA[15]]></tokenlength>
+    <showxquestions><![CDATA[Y]]></showxquestions>
+    <showgroupinfo><![CDATA[B]]></showgroupinfo>
+    <shownoanswer><![CDATA[N]]></shownoanswer>
+    <showqnumcode><![CDATA[X]]></showqnumcode>
+    <bounceprocessing><![CDATA[N]]></bounceprocessing>
+    <showwelcome><![CDATA[Y]]></showwelcome>
+    <showprogress><![CDATA[Y]]></showprogress>
+    <questionindex><![CDATA[0]]></questionindex>
+    <navigationdelay><![CDATA[0]]></navigationdelay>
+    <nokeyboard><![CDATA[N]]></nokeyboard>
+    <alloweditaftercompletion><![CDATA[N]]></alloweditaftercompletion>
+   </row>
+  </rows>
+ </surveys>
+ <surveys_languagesettings>
+  <fields>
+   <fieldname>surveyls_survey_id</fieldname>
+   <fieldname>surveyls_language</fieldname>
+   <fieldname>surveyls_title</fieldname>
+   <fieldname>surveyls_description</fieldname>
+   <fieldname>surveyls_welcometext</fieldname>
+   <fieldname>surveyls_endtext</fieldname>
+   <fieldname>surveyls_url</fieldname>
+   <fieldname>surveyls_urldescription</fieldname>
+   <fieldname>surveyls_email_invite_subj</fieldname>
+   <fieldname>surveyls_email_invite</fieldname>
+   <fieldname>surveyls_email_remind_subj</fieldname>
+   <fieldname>surveyls_email_remind</fieldname>
+   <fieldname>surveyls_email_register_subj</fieldname>
+   <fieldname>surveyls_email_register</fieldname>
+   <fieldname>surveyls_email_confirm_subj</fieldname>
+   <fieldname>surveyls_email_confirm</fieldname>
+   <fieldname>surveyls_dateformat</fieldname>
+   <fieldname>surveyls_attributecaptions</fieldname>
+   <fieldname>email_admin_notification_subj</fieldname>
+   <fieldname>email_admin_notification</fieldname>
+   <fieldname>email_admin_responses_subj</fieldname>
+   <fieldname>email_admin_responses</fieldname>
+   <fieldname>surveyls_numberformat</fieldname>
+   <fieldname>attachments</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <surveyls_survey_id><![CDATA[845287]]></surveyls_survey_id>
+    <surveyls_language><![CDATA[es-MX]]></surveyls_language>
+    <surveyls_title><![CDATA[Red Hat TechDay]]></surveyls_title>
+    <surveyls_description><![CDATA[Encuesta de alineación de necesidades para orientar las presentaciones a requerimientos de los clientes]]></surveyls_description>
+    <surveyls_welcometext><![CDATA[Bienvenido a la encuesta de alineación de requerimientos para el Red Hat TechDay.]]></surveyls_welcometext>
+    <surveyls_endtext><![CDATA[<p>Muchas gracias por participar.</p>
+
+<p>Esperamos que disfrutes el evento.</p>
+]]></surveyls_endtext>
+    <surveyls_url/>
+    <surveyls_urldescription/>
+    <surveyls_email_invite_subj><![CDATA[Invitación a participar en una encuesta]]></surveyls_email_invite_subj>
+    <surveyls_email_invite><![CDATA[Estimado/a {FIRSTNAME},<br />
+<br />
+usted ha sido invitado a participar en una encuesta.<br />
+<br />
+La encuesta es titulada:<br />
+"{SURVEYNAME}"<br />
+<br />
+"{SURVEYDESCRIPTION}"<br />
+<br />
+Para participar, por favor pulse en el siguiente enlace.<br />
+<br />
+Atentamente,<br />
+<br />
+{ADMINNAME} ({ADMINEMAIL}) <br />
+Pulse aquí para hacer la encuesta:<br />
+{SURVEYURL}<br />
+<br />
+Si no desea participar más en esta encuesta y no quiere recibir más invitaciones, por favor haga click en el siguiente link:<br />
+{OPTOUTURL}<br />
+<br />
+Si está en la lista negra, pero desea participar en esta encuesta y desea recibir invitaciones por favor haga clic en el siguiente enlace:<br />
+{OpenUrl} ]]></surveyls_email_invite>
+    <surveyls_email_remind_subj><![CDATA[Recordatorio para participar en una encuesta]]></surveyls_email_remind_subj>
+    <surveyls_email_remind><![CDATA[Estimado/a {FIRSTNAME} {LASTNAME}:<br />
+<br />
+Recientemente se le invitó a participar en la encuesta de título<br />
+<br />
+«{SURVEYNAME}»<br />
+<br />
+«{SURVEYDESCRIPTION}»<br />
+<br />
+Advertimos que aún no la ha completado, y de la forma más atenta queríamos recordarle que todavía se encuentra disponible si desea participar.<br />
+<br />
+Para hacerlo, por favor pulse en el siguiente enlace.<br />
+<br />
+{SURVEYURL}<br />
+<br />
+Nuevamente le agradecemos su interés y colaboración.<br />
+Atentamente,<br />
+<br />
+{ADMINNAME} ({ADMINEMAIL})<br />
+<br />
+Si no desea participar más en esta encuesta y no quiere recibir más invitaciones, por favor haga click en el siguiente link:<br />
+{OPTOUTURL}]]></surveyls_email_remind>
+    <surveyls_email_register_subj><![CDATA[Confirmación de inscripción en la encuesta]]></surveyls_email_register_subj>
+    <surveyls_email_register><![CDATA[Estimado/a {FIRSTNAME} {LASTNAME}:<br />
+<br />
+Usted, o alguien utilizando su dirección de correo electrónico, se ha registrado para participar en un cuestionario en línea titulado "{SURVEYNAME}".<br />
+<br />
+Para completarla, pulse en la siguiente URL:<br />
+<br />
+{SURVEYURL}<br />
+<br />
+Si tiene dudas con respecto al cuestionario, o si no se registró para participar y cree que este correo es un error, por favor, póngase en contacto con {ADMINNAME} en {ADMINEMAIL}.]]></surveyls_email_register>
+    <surveyls_email_confirm_subj><![CDATA[Confirmación de su participación en nuestra encuesta]]></surveyls_email_confirm_subj>
+    <surveyls_email_confirm><![CDATA[Estimado/a {FIRSTNAME},<br />
+<br />
+este correo es para confirmarle que ha completado la encuesta titulada {SURVEYNAME} y sus respuestas han sido guardadas. Gracias por su participación.<br />
+<br />
+Si tiene alguna duda sobre este correo electrónico, por favor póngase en contacto con {ADMINNAME} en {ADMINEMAIL}.<br />
+<br />
+Reciba un muy cordial saludo,<br />
+<br />
+{ADMINNAME}]]></surveyls_email_confirm>
+    <surveyls_dateformat><![CDATA[5]]></surveyls_dateformat>
+    <email_admin_notification_subj><![CDATA[Responder envío de encuesta {SURVEYNAME}]]></email_admin_notification_subj>
+    <email_admin_notification><![CDATA[Hola,<br />
+<br />
+Una nueva respuesta ha sido realizada para su encuesta '{SURVEYNAME}'.<br />
+<br />
+Click en el siguiente link para recargar la encuesta:<br />
+{RELOADURL}<br />
+<br />
+Click en el siguiente link para ver la respuesta individualmente:<br />
+{VIEWRESPONSEURL}<br />
+<br />
+Click en el siguiente link para editar la respuesta:<br />
+{EDITRESPONSEURL}<br />
+<br />
+Vea las estadísticas aquí:<br />
+{STATISTICSURL}<br />
+<br />
+<br />
+Las siguientes respuestas fueron subidas por:<br />
+{ANSWERTABLE}]]></email_admin_notification>
+    <email_admin_responses_subj><![CDATA[Responder envío de encuesta {SURVEYNAME} con resultados]]></email_admin_responses_subj>
+    <email_admin_responses><![CDATA[Hola,<br />
+<br />
+Una nueva respuesta ha sido realizada para su encuesta '{SURVEYNAME}'.<br />
+<br />
+Click en el siguiente link para recargar la encuesta:<br />
+{RELOADURL}<br />
+<br />
+Click en el siguiente link para ver la respuesta individualmente:<br />
+{VIEWRESPONSEURL}<br />
+<br />
+Click en el siguiente link para editar la respuesta:<br />
+{EDITRESPONSEURL}<br />
+<br />
+Vea las estadísticas aquí:<br />
+{STATISTICSURL}<br />
+<br />
+<br />
+Las siguientes respuestas fueron subidas por:<br />
+{ANSWERTABLE}]]></email_admin_responses>
+    <surveyls_numberformat><![CDATA[0]]></surveyls_numberformat>
+   </row>
+  </rows>
+ </surveys_languagesettings>
+</document>

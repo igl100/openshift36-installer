@@ -1,0 +1,52 @@
+---
+- name: Selecting main installation server for OpenShift
+  hosts: localhost
+  gather_facts: False
+  tasks:
+      - name: Retriving Installer host
+        set_fact: headnodes={{ groups[['openshift_master_group'][0]] }}
+        tags:
+           - selecting_headnode
+
+      - name: Selecting first master as main installer
+        add_host: groups=openshift_headnode_group hostname={{ headnodes[0] }}
+        tags:
+           - selecting_headnode
+
+- name: Uploading template
+  hosts: openshift_headnode_group
+  tasks:
+      - name: Deleting Limesurvey Environment If exists
+        command: "oc delete project limesurvey"
+        ignore_errors: True
+        tags:
+           - limesurvey_setup
+
+      - name: Copying limesurvey Yaml template
+        copy:
+           src="./limesurvey-template.yaml"
+           dest="/root/limesurvey-template.yaml"
+        ignore_errors: True
+        tags:
+           - limesurvey_setup
+
+      - name: Creating Limesurvey Environment
+        command: "oc new-project limesurvey --display-name=\"LimeSurvey\""
+        tags:
+           - limesurvey_setup
+
+      - name: Adding DV user to Limesurvey
+        command: "oadm policy add-role-to-user admin dv -n limesurvey"
+        tags:
+           - limesurvey_setup
+
+      - name: Creating Limesurvey template
+        command: "oc create -f /root/limesurvey-template.yaml -n limesurvey"
+        tags:
+           - limesurvey_setup
+
+      - name: Running Limesurvey App
+        command: "oc new-app limesurvey-template -n limesurvey"
+        tags:
+           - containers_setup
+
