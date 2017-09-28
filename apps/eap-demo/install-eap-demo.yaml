@@ -1,0 +1,31 @@
+---
+- name: Selecting main installation server for OpenShift
+  hosts: localhost
+  gather_facts: False
+  tasks:
+      - name: Retriving Installer host
+        set_fact: headnodes={{ groups[['openshift_master_group'][0]] }}
+        tags:
+           - selecting_headnode
+
+      - name: Selecting first master as main installer
+        add_host: groups=openshift_headnode_group hostname={{ headnodes[0] }}
+        tags:
+           - selecting_headnode
+
+- name: Uploading template
+  hosts: openshift_headnode_group
+  tasks:
+      - name: Copying eap-demo pipleline Yaml template
+        copy:
+           src="./eap-demo-pipeline.yaml"
+           dest="/root/eap-demo-pipeline.yaml"
+        ignore_errors: True
+        tags:
+           - eapdemo_setup
+
+      - name: Creating eap-demo pipeline template
+        command: "oc create -f /root/eap-demo-pipeline.yaml -n cicd"
+        tags:
+           - eapdemo_setup
+
