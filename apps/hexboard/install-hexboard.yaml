@@ -1,0 +1,84 @@
+---
+- name: Selecting main installation server for OpenShift
+  hosts: localhost
+  gather_facts: False
+  tasks:
+      - name: Retriving Installer host
+        set_fact: headnodes={{ groups[['openshift_master_group'][0]] }}
+        tags:
+           - selecting_headnode
+
+      - name: Selecting first master as main installer
+        add_host: groups=openshift_headnode_group hostname={{ headnodes[0] }}
+        tags:
+           - selecting_headnode
+
+- name: Uploading template
+  hosts: openshift_headnode_group
+  tasks:
+      - name: Logging as system:admin
+        command: "oc login -u system:admin"
+        tags:
+           - hexaboard_setup
+
+      - name: Deleting hexaboard Environment If exists
+        command: "oc delete project hexaboard"
+        ignore_errors: True
+        tags:
+           - hexaboard_setup
+
+      - name: Waiting for installation to end...
+        pause:
+            minutes: 1
+        tags:
+           - install_openshift
+
+      - name: Creating hexaboard Environment
+        command: "oc new-project hexaboard --display-name=\"Hexaboard\""
+        tags:
+           - hexaboard_setup
+
+      - name: Adding DV user to hexaboard
+        command: "oadm policy add-role-to-user admin dv -n hexaboard"
+        tags:
+           - hexaboard_setup
+
+      - name: Logging as dv user
+        command: "oc login -u dv -p r3dh4t1!"
+        tags:
+           - hexaboard_setup
+
+      - name: Getting loging token
+        command: "oc whoami -t"
+        register: OAUTH_TOKEN
+        tags:
+           - hexaboard_setup
+
+      - name: Stting up token variable
+        set_fact: token="{{ OAUTH_TOKEN.stdout }}"
+        tags:
+           - hexaboard_setup
+#"
+
+      - name: Access login tokn to use
+        debug:
+           msg: "Token to use {{ token }}"
+        tags:
+           - hexaboard_setup
+
+      - name: Copying hexaboard Yaml template
+        template:
+           src: "./hexaboard_template.j2"
+           dest: "/root/hexaboard-template.yaml"
+           owner: root
+           group: root
+           mode: "u=rw,g=r,o=r"
+        ignore_errors: True
+        tags:
+           - hexaboard_setup
+
+      - name: Creating hexaboard from tmplate
+        command: "oc new-app -f /root/hexaboard-template.yaml -n hexaboard"
+        tags:
+           - hexaboard_setup
+
