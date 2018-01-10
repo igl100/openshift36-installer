@@ -111,7 +111,7 @@
          - rhel-7-server-ose-3.6-rpms
          - rhel-7-fast-datapath-rpms
          - rhel-7-server-rhmap-4.3-rpms
-         - rhel-7-server-3scale-amp-2.0-rpms
+         - rhel-7-server-3scale-amp-2.1-rpms
      disk_storage: "/dev/sdb"
      disk_storage_partition: "{{ disk_storage }}1"
      disk_storage_directory: "/var/storage/repos"

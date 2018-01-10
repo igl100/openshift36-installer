@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  annotations:
+    pipeline.alpha.openshift.io/uses: '[{"name": "bgdemo", "namespace": "", "kind": "DeploymentConfig"}]'
+  labels:
+    name: bgdemo-pipeline
+  name: bgdemo-pipeline
+spec:
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        node('maven') {
+          stage 'buildInDevelopment'
+            openshiftBuild(namespace: 'dev', buildConfig: 'bgdemo', showBuildLogs: 'true')
+          stage 'deployInDevelopment'
+            openshiftDeploy(namespace: 'dev', deploymentConfig: 'bgdemo')
+            openshiftScale(namespace: 'dev', deploymentConfig: 'bgdemo',replicaCount: '2')
+          stage 'deployInTesting'
+            openshiftTag(namespace: 'dev', sourceStream: 'bgdemo',  sourceTag: 'latest', destinationStream: 'bgdemo', destinationTag: 'promoteToQA')
+            openshiftDeploy(namespace: 'stage', deploymentConfig: 'bgdemo', )
+            openshiftScale(namespace: 'stage', deploymentConfig: 'bgdemo',replicaCount: '3')
+        }
+    type: JenkinsPipeline
+  triggers:
+  - github:
+      secret: secret01
+    type: GitHub
+  - generic:
+      secret: secret01
+    type: Generic
+
+

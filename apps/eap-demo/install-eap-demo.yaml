@@ -29,3 +29,16 @@
         tags:
            - eapdemo_setup
 
+      - name: Copying bgdemo pipleline Yaml template
+        copy:
+           src="./bgdemo-pipeline.yaml"
+           dest="/root/bgdemo-pipeline.yaml"
+        ignore_errors: True
+        tags:
+           - bgdemo_setup
+
+      - name: Creating bgdemo pipeline template
+        command: "oc create -f /root/bgdemo-pipeline.yaml -n cicd"
+        tags:
+           - bgdemo_setup
+

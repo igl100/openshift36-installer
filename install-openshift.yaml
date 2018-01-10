@@ -461,6 +461,11 @@
   hosts: openshift_headnode_group
   gather_facts: False
   tasks:
+      - name: Setting GlusterFS storage class as defaults
+        command: "oc patch storageclass glusterfs-storage -p \'{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}\'"
+        tags:
+           - containers_setup
+
       - name: Deleting Dev Environment If exists
         command: "oc delete project dev"
         ignore_errors: True
@@ -527,6 +532,16 @@
 
       - name: Adding DV user to CICD
         command: "oadm policy add-role-to-user admin dv -n cicd"
+        tags:
+           - containers_setup
+
+      - name: Adding DV user to default
+        command: "oadm policy add-role-to-user admin dv -n default"
+        tags:
+           - containers_setup
+
+      - name: Adding DV user to logging
+        command: "oadm policy add-role-to-user admin dv -n logging"
         tags:
            - containers_setup
 
