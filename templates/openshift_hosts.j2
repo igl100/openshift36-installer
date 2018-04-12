@@ -21,6 +21,11 @@ openshift_hosted_registry_storage_kind=glusterfs
 openshift_master_api_port=443
 openshift_master_console_port=443
 openshift_master_cluster_method=native
+openshift_hosted_etcd_storage_kind=glusterfss
+openshift_hosted_etcd_storage_volume_name=etcd-vol2 
+openshift_hosted_etcd_storage_access_modes=["ReadWriteOnce"]
+openshift_hosted_etcd_storage_volume_size=1G
+openshift_hosted_etcd_storage_labels={'storage': 'etcd'}
 {% for host in groups['openshift_router_lb_group'] %}
 openshift_master_metrics_public_url=https://hawkular-metrics.apps.{{ openshift_subdomain }}/hawkular/metrics
 openshift_master_default_subdomain=apps.{{ openshift_subdomain }}

@@ -36,7 +36,7 @@ spec:
               // clean up. keep the image stream
               sh "oc delete bc,dc,svc,route -l app=eapdemo -n dev"
               // create build. override the exit code since it complains about exising imagestream
-              sh "oc new-build --name=eapdemo --image-stream=jboss-eap70-openshift --binary=true --labels=app=eapdemo -n dev || true"
+              sh "oc new-build --name=eapdemo --image-stream=jboss-eap70-openshift:1.6 --binary=true --labels=app=eapdemo -n dev || true"
               // build image
               sh "oc start-build eapdemo --from-dir=oc-build --wait=true -n dev"
               // deploy image

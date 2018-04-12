@@ -1,17 +1,20 @@
 ---
 - name: Downloading repositories (ONLY)
-  hosts: localhost
+  hosts: openshift_repos_group
   connection: local
   gather_facts: False
+  vars_files:
+     - settings/authentications
+     - settings/defaults
   vars:
      repositories:
          - rhel-7-server-rpms
          - rhel-7-server-extras-rpms
-         - rhel-7-server-ose-3.6-rpms
+         - rhel-7-server-ose-{{ openshift_version }}-rpms
          - rhel-7-fast-datapath-rpms
          - rhel-7-server-rhmap-4.3-rpms
          - rhel-7-server-3scale-amp-2.1-rpms
-     disk_storage_directory: "/var/storage/repos"
+     disk_storage_directory: "/var/storage/repos/"
   tasks:
     - name: Downloading repositories (FINAL STEP 1/2)
       command: reposync --gpgcheck -lm --repoid={{ item }} --download_path={{ disk_storage_directory }}
