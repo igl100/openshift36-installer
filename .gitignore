@@ -6,4 +6,5 @@ settings/slack_authentication
 tmp/authorized_keys
 tmp/hosts
 tmp/openshift.config
+tmp/ansible.log
 *.retry
